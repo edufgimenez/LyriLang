@@ -1,0 +1,6 @@
+node_modules/
+web-ext-artifacts/
+.web-extension-id
+
+# documentos locais, fora do repositório
+docs/LYRILANG_AUDITORIA_PUBLICACAO.md
