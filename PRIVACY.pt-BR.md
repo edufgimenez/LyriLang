@@ -1,3 +1,5 @@
+[English](PRIVACY.md) | **Português (Brasil)**
+
 # Política de privacidade do LyriLang
 
 Última atualização: 20 de outubro de 2026

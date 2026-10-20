@@ -1,45 +1,48 @@
+**English** | [Português (Brasil)](README.pt-BR.md)
+
 # LyriLang
 
-Extensão de navegador que mostra, abaixo de cada linha da letra no [Spotify Web](https://open.spotify.com), a mesma linha traduzida para o idioma que você escolher.
+Browser extension that shows, below each lyric line on [Spotify Web](https://open.spotify.com), the same line translated into the language you choose.
 
-Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos.
+Works on Firefox (142+) and Chrome (121+) with the same files. The extension interface is available in English and Portuguese (Brazil), following the browser language.
 
-> O LyriLang é um projeto independente e não é afiliado, patrocinado nem endossado pelo Spotify.
+> LyriLang is an independent project and is not affiliated with, sponsored by, or endorsed by Spotify.
 
-## Como funciona
+## How it works
 
-- `extension/src/content.js` observa a página do Spotify, lê as linhas (`[data-testid="lyrics-line"]`) e coloca a tradução dentro de cada linha. Como o Spotify recria essas linhas o tempo todo, a tradução é reaplicada a partir de um mapa em memória.
-- `extension/src/background.js` traduz a letra inteira de uma vez, usando o endpoint gratuito do Google Tradutor (não oficial), e guarda o resultado em cache no `storage.local`.
-- `extension/popup/` permite ligar e desligar a tradução e escolher o idioma de destino.
+- `extension/src/content.js` watches the Spotify page, reads the lyric lines (`[data-testid="lyrics-line"]`) and inserts the translation inside each line. Since Spotify recreates these lines all the time, the translation is reapplied from an in-memory map.
+- `extension/src/background.js` translates the whole lyrics at once using the free (unofficial) Google Translate endpoint and caches the result in `storage.local`.
+- `extension/popup/` lets you turn the translation on or off and choose the target language.
 
-> O texto das letras é enviado ao Google Tradutor para ser traduzido. Veja a [política de privacidade](PRIVACY.md).
+> The lyric text is sent to Google Translate to be translated. See the [privacy policy](PRIVACY.md).
 
-## Estrutura
+## Structure
 
 ```
-extension/   ← a extensão em si (é o que vai no zip, para Firefox e Chrome)
-docs/        ← documentos do projeto (não entram no zip)
+extension/   ← the extension itself (what goes into the zip, for Firefox and Chrome)
+  _locales/  ← interface texts (en, pt_BR)
+docs/        ← project documents (not included in the zip)
 ```
 
-## Desenvolvimento
+## Development
 
 ```sh
 npm install
-npm run lint     # valida a extensão com o web-ext
-npm start        # abre um Firefox com perfil limpo e a extensão carregada
-npm run build    # gera o .zip em web-ext-artifacts/ (só com o conteúdo de extension/)
+npm run lint     # validates the extension with web-ext
+npm start        # opens Firefox with a clean profile and the extension loaded
+npm run build    # creates the .zip in web-ext-artifacts/ (only with the contents of extension/)
 ```
 
-### Carregar no seu Firefox (com o seu login do Spotify)
+### Load it in your Firefox (with your Spotify login)
 
-1. Abra `about:debugging#/runtime/this-firefox`.
-2. Clique em **Carregar extensão temporária…** e escolha `extension/manifest.json`.
-3. Abra a letra de uma música no Spotify Web e escolha o idioma no popup da extensão.
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and choose `extension/manifest.json`.
+3. Open the lyrics of a song on Spotify Web and choose the language in the extension popup.
 
 ### Chrome (via GitHub)
 
-A extensão não está na Chrome Web Store. Para usar no Chrome:
+The extension is not on the Chrome Web Store. To use it on Chrome:
 
-1. Baixe o `.zip` da versão mais recente em [Releases](https://github.com/edufgimenez/LyriLang/releases) e descompacte, ou clone este repositório.
-2. Abra `chrome://extensions` e ative o **Modo do desenvolvedor**.
-3. Clique em **Carregar sem compactação** e escolha a pasta descompactada (ou a pasta `extension/` do repositório).
+1. Download the `.zip` of the latest version from [Releases](https://github.com/edufgimenez/LyriLang/releases) and unzip it, or clone this repository.
+2. Open `chrome://extensions` and enable **Developer mode**.
+3. Click **Load unpacked** and choose the unzipped folder (or the repository's `extension/` folder).
