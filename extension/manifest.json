@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "LyriLang",
   "version": "0.1.0",
-  "description": "Mostra a tradução de cada linha da letra abaixo da original no Spotify Web.",
+  "description": "Mostra a tradução de cada linha da letra no Spotify Web. As linhas são enviadas ao Google Tradutor.",
+  "homepage_url": "https://github.com/edufgimenez/LyriLang",
   "permissions": ["storage"],
   "host_permissions": [
     "https://open.spotify.com/*",

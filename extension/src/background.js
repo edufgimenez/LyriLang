@@ -8,11 +8,25 @@ const CACHE_MAX_ENTRIES = 200;
 
 api.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type !== 'translate') return false;
+  if (!isValidTranslateRequest(msg)) {
+    sendResponse({ error: 'requisição de tradução inválida' });
+    return false;
+  }
   translateLines(msg.lines, msg.target)
     .then(sendResponse)
     .catch((err) => sendResponse({ error: String(err?.message ?? err) }));
   return true;
 });
+
+function isValidTranslateRequest({ lines, target }) {
+  return (
+    Array.isArray(lines) &&
+    lines.length > 0 &&
+    lines.every((line) => typeof line === 'string') &&
+    typeof target === 'string' &&
+    /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(target)
+  );
+}
 
 // Traduz `lines` para `target` e devolve as traduções na mesma ordem.
 async function translateLines(lines, target) {
@@ -59,6 +73,7 @@ async function googleTranslate(text, target) {
   const params = new URLSearchParams({ client: 'gtx', sl: 'auto', tl: target, dt: 't' });
   const res = await fetch(`${GOOGLE_URL}?${params}`, {
     method: 'POST',
+    credentials: 'omit',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     body: new URLSearchParams({ q: text }),
   });

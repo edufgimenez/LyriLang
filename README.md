@@ -10,7 +10,7 @@ Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos.
 - `extension/src/background.js` traduz a letra inteira de uma vez, usando o endpoint gratuito do Google Tradutor (não oficial), e guarda o resultado em cache no `storage.local`.
 - `extension/popup/` permite ligar e desligar a tradução e escolher o idioma de destino.
 
-> O texto das letras é enviado ao Google Tradutor para ser traduzido.
+> O texto das letras é enviado ao Google Tradutor para ser traduzido. Veja a [política de privacidade](PRIVACY.md).
 
 ## Estrutura
 
