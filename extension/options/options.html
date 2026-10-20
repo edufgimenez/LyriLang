@@ -50,6 +50,19 @@
           <input id="imageFile" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" tabindex="-1">
         </div>
         <p id="imageError" class="error" role="alert" hidden></p>
+        <div class="mode-row">
+          <span data-i18n="wallpaperFit"></span>
+          <div class="segmented" role="radiogroup">
+            <label><input type="radio" name="wallpaperFit" value="cover"><span data-i18n="fitCover"></span></label>
+            <label><input type="radio" name="wallpaperFit" value="contain"><span data-i18n="fitContain"></span></label>
+          </div>
+        </div>
+        <label id="positionRow" class="range-row">
+          <span data-i18n="wallpaperPosition"></span>
+          <input id="wallpaperPosition" type="range" min="0" max="100" step="5">
+          <output id="positionValue" for="wallpaperPosition"></output>
+        </label>
+        <p id="lowResNote" class="note warn" hidden></p>
         <label class="range-row">
           <span data-i18n="dimImage"></span>
           <input id="wallpaperDim" type="range" min="0" max="80" step="5">

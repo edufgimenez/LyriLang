@@ -81,6 +81,33 @@
   "imageTooLarge": {
     "message": "Essa imagem é grande demais (máx. 25 MB)."
   },
+  "wallpaperFit": {
+    "message": "Encaixe"
+  },
+  "fitCover": {
+    "message": "Preencher"
+  },
+  "fitContain": {
+    "message": "Imagem inteira"
+  },
+  "wallpaperPosition": {
+    "message": "Posição vertical"
+  },
+  "positionTop": {
+    "message": "Topo"
+  },
+  "positionCenter": {
+    "message": "Centro"
+  },
+  "positionBottom": {
+    "message": "Base"
+  },
+  "lowResCover": {
+    "message": "Esta imagem tem pouca resolução para a sua tela e pode ficar borrada. O encaixe \"Imagem inteira\" ajuda."
+  },
+  "lowResContain": {
+    "message": "Esta imagem tem pouca resolução para a sua tela e pode ficar um pouco borrada."
+  },
   "dimImage": {
     "message": "Escurecer imagem"
   },

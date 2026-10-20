@@ -81,6 +81,33 @@
   "imageTooLarge": {
     "message": "This image is too large (max. 25 MB)."
   },
+  "wallpaperFit": {
+    "message": "Fit"
+  },
+  "fitCover": {
+    "message": "Fill"
+  },
+  "fitContain": {
+    "message": "Whole image"
+  },
+  "wallpaperPosition": {
+    "message": "Vertical position"
+  },
+  "positionTop": {
+    "message": "Top"
+  },
+  "positionCenter": {
+    "message": "Center"
+  },
+  "positionBottom": {
+    "message": "Bottom"
+  },
+  "lowResCover": {
+    "message": "This image has a low resolution for your screen and may look blurry. The \"Whole image\" fit helps."
+  },
+  "lowResContain": {
+    "message": "This image has a low resolution for your screen and may look a bit blurry."
+  },
   "dimImage": {
     "message": "Darken image"
   },

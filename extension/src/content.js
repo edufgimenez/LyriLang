@@ -1,5 +1,5 @@
 (() => {
-  const { api, getSettings, getWallpaper, WALLPAPER_KEY } = globalThis.LyriLang;
+  const { api, getSettings, getWallpaper, buildWallpaperLayers, WALLPAPER_KEY } = globalThis.LyriLang;
 
   const LINE_SELECTOR = '[data-testid="lyrics-line"]';
   const TR_CLASS = 'lyrilang-tr';
@@ -13,10 +13,12 @@
   // Container da letra na tela principal (o painel lateral também define as variáveis).
   const MAIN_HOLDER_SELECTOR =
     '[style*="--lyrics-color-background"]:not([data-testid="lyrics-npv-section"])';
-  const APPEARANCE_KEYS = ['customColors', 'colors', 'backgroundMode', 'wallpaperDim', 'textShadow'];
+  const APPEARANCE_KEYS = [
+    'customColors', 'colors', 'backgroundMode', 'wallpaperDim', 'wallpaperFit', 'wallpaperPosition', 'textShadow',
+  ];
 
   let settings = { enabled: false, targetLang: 'en', customColors: false, colors: null };
-  let wallpaperUrl = null;
+  let wallpaper = null; // { dataUrl, blurDataUrl, width, height }
   let wallpaperScroller = null;
   let wallpaperCheckPending = false;
   const translations = new Map(); // linha original -> tradução ('' = sem tradução)
@@ -129,7 +131,7 @@
   }
 
   function wallpaperActive() {
-    return settings.customColors && settings.backgroundMode === 'image' && Boolean(wallpaperUrl);
+    return settings.customColors && settings.backgroundMode === 'image' && Boolean(wallpaper);
   }
 
   // O Spotify define as cores da letra em variáveis CSS inline no container
@@ -156,11 +158,10 @@
   --lyrics-color-messaging: ${inactive} !important;
 }`];
     if (wallpaperActive()) {
-      const dim = settings.wallpaperDim / 100;
       rules.push(`${MAIN_HOLDER_SELECTOR} { --lyrics-color-background: transparent !important; }`);
       rules.push(`[${WALLPAPER_ATTR}] {
-  background: linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim})),
-    url("${wallpaperUrl}") center / cover no-repeat !important;
+  background: ${buildWallpaperLayers(wallpaper, settings)} !important;
+  background-color: ${background} !important;
 }`);
       rules.push(`[${CLEAR_ATTR}] { background: none !important; }`);
     }
@@ -235,7 +236,7 @@
   api.storage.onChanged.addListener(async (changes, area) => {
     if (area === 'local') {
       if (!(WALLPAPER_KEY in changes)) return;
-      wallpaperUrl = await getWallpaper();
+      wallpaper = await getWallpaper();
       applyAppearance();
       return;
     }
@@ -248,9 +249,9 @@
     if (translationChanged) reset();
   });
 
-  Promise.all([getSettings(), getWallpaper()]).then(([s, wallpaper]) => {
+  Promise.all([getSettings(), getWallpaper()]).then(([s, storedWallpaper]) => {
     settings = s;
-    wallpaperUrl = wallpaper;
+    wallpaper = storedWallpaper;
     applyAppearance();
     observer.observe(document.body, { childList: true, subtree: true });
     if (settings.enabled) scheduleRequest(0);

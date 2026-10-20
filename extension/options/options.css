@@ -177,7 +177,7 @@ fieldset:disabled .segmented span {
 
 .range-row {
   display: grid;
-  grid-template-columns: 1fr 180px 44px;
+  grid-template-columns: 1fr 180px 56px;
   align-items: center;
   gap: 12px;
   padding: 8px 0;
@@ -198,6 +198,14 @@ fieldset:disabled .segmented span {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 12px;
+}
+
+.note.warn {
+  color: #f5c26b;
+}
+
+.range-row output#positionValue {
+  font-family: inherit;
 }
 
 .check-row {
