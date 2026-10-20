@@ -9,6 +9,7 @@
 
   const COLORS_STYLE_ID = 'lyrilang-colors';
   const WALLPAPER_ATTR = 'data-lyrilang-wallpaper';
+  const CLEAR_ATTR = 'data-lyrilang-clear';
   // Container da letra na tela principal (o painel lateral também define as variáveis).
   const MAIN_HOLDER_SELECTOR =
     '[style*="--lyrics-color-background"]:not([data-testid="lyrics-npv-section"])';
@@ -17,6 +18,7 @@
   let settings = { enabled: false, targetLang: 'en', customColors: false, colors: null };
   let wallpaperUrl = null;
   let wallpaperScroller = null;
+  let wallpaperCheckPending = false;
   const translations = new Map(); // linha original -> tradução ('' = sem tradução)
   const pending = new Set();
   let generation = 0; // muda quando o idioma ou o liga/desliga mudam
@@ -24,7 +26,7 @@
   let retryDelay = 0;
 
   const observer = new MutationObserver(() => {
-    if (wallpaperActive()) markWallpaperScroller();
+    if (wallpaperActive()) scheduleWallpaperCheck();
     if (!settings.enabled) return;
     // Síncrono: o Spotify recria as linhas o tempo todo e a tradução não pode piscar.
     applyAll();
@@ -160,6 +162,7 @@
   background: linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim})),
     url("${wallpaperUrl}") center / cover no-repeat !important;
 }`);
+      rules.push(`[${CLEAR_ATTR}] { background: none !important; }`);
     }
     if (settings.textShadow) {
       rules.push(`${MAIN_HOLDER_SELECTOR} ${LINE_SELECTOR} { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }`);
@@ -172,10 +175,54 @@
   // fica parado enquanto o conteúdo passa por cima, como um papel de parede.
   function markWallpaperScroller() {
     const holder = wallpaperActive() ? document.querySelector(MAIN_HOLDER_SELECTOR) : null;
-    if (holder && wallpaperScroller?.isConnected && wallpaperScroller.contains(holder)) return;
-    wallpaperScroller?.removeAttribute(WALLPAPER_ATTR);
-    wallpaperScroller = holder ? findScrollParent(holder) : null;
-    wallpaperScroller?.setAttribute(WALLPAPER_ATTR, '');
+    if (!(holder && wallpaperScroller?.isConnected && wallpaperScroller.contains(holder))) {
+      wallpaperScroller?.removeAttribute(WALLPAPER_ATTR);
+      wallpaperScroller = holder ? findScrollParent(holder) : null;
+      wallpaperScroller?.setAttribute(WALLPAPER_ATTR, '');
+    }
+    clearCoveringLayers(holder);
+  }
+
+  // O Spotify muda as camadas o tempo todo; verifica no máximo uma vez por quadro.
+  function scheduleWallpaperCheck() {
+    if (wallpaperCheckPending) return;
+    wallpaperCheckPending = true;
+    requestAnimationFrame(() => {
+      wallpaperCheckPending = false;
+      markWallpaperScroller();
+    });
+  }
+
+  // Camadas grandes do Spotify entre o elemento que rola e a letra, que pintam um fundo
+  // próprio (ex.: o degradê do "modo cinema" em faixas com videoclipe), cobririam a imagem.
+  function clearCoveringLayers(holder) {
+    const covering = new Set();
+    if (holder && wallpaperScroller) {
+      const minWidth = wallpaperScroller.clientWidth * 0.9;
+      const minHeight = wallpaperScroller.clientHeight * 0.5;
+      for (let node = holder; node && node !== wallpaperScroller; node = node.parentElement) {
+        const parent = node.parentElement;
+        if (!parent) break;
+        const candidates = parent === wallpaperScroller ? [...parent.children] : [parent, ...parent.children];
+        for (const el of candidates) {
+          if (el === holder || holder.contains(el)) continue;
+          if (paintsLargeBackground(el, minWidth, minHeight)) covering.add(el);
+        }
+      }
+    }
+    for (const el of document.querySelectorAll(`[${CLEAR_ATTR}]`)) {
+      if (!covering.has(el)) el.removeAttribute(CLEAR_ATTR);
+    }
+    for (const el of covering) el.setAttribute(CLEAR_ATTR, '');
+  }
+
+  function paintsLargeBackground(el, minWidth, minHeight) {
+    const rect = el.getBoundingClientRect();
+    if (rect.width < minWidth || rect.height < minHeight) return false;
+    // Já marcada: o fundo calculado agora é transparente por causa da própria marcação.
+    if (el.hasAttribute(CLEAR_ATTR)) return true;
+    const style = getComputedStyle(el);
+    return style.backgroundImage !== 'none' || !/^(transparent|rgba\(.*,\s*0\))$/.test(style.backgroundColor);
   }
 
   function findScrollParent(el) {
