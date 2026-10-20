@@ -19,7 +19,13 @@ globalThis.LyriLang ??= (() => {
   // Encaixe: 'cover' preenche a área (corta o que sobra); 'contain' mostra a imagem
   // inteira, com uma versão desfocada dela preenchendo as laterais.
   const WALLPAPER_FITS = ['cover', 'contain'];
-  const DEFAULT_WALLPAPER_POSITION = 50; // % vertical do recorte no modo 'cover'
+  // Ponto de foco do modo 'cover', em % da imagem (X e Y). O ponto escolhido fica sempre
+  // visível, qualquer que seja o lado cortado. A chave do Y continua 'wallpaperPosition'
+  // para manter o que já foi salvo quando só existia a posição vertical.
+  const DEFAULT_WALLPAPER_POSITION = 50;
+  // Tamanho da área da letra no Spotify, medido pelo content script. A página de opções
+  // usa para mostrar a prévia e o recorte no formato real.
+  const LYRICS_AREA_KEY = 'lyricsArea';
 
   const isImageDataUrl = (value) =>
     typeof value === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
@@ -42,16 +48,26 @@ globalThis.LyriLang ??= (() => {
     };
   }
 
+  // Devolve { width, height, dpr } da última vez que a letra foi aberta, ou null.
+  async function getLyricsArea() {
+    const { [LYRICS_AREA_KEY]: stored } = await api.storage.local.get(LYRICS_AREA_KEY);
+    const width = clampInt(stored?.width, 0, 20000, 0);
+    const height = clampInt(stored?.height, 0, 20000, 0);
+    if (!width || !height) return null;
+    const dpr = Number(stored.dpr);
+    return { width, height, dpr: Number.isFinite(dpr) && dpr > 0 && dpr <= 8 ? dpr : 1 };
+  }
+
   // Camadas CSS do fundo: escurecimento por cima e a imagem embaixo. No modo 'contain'
   // a imagem aparece inteira e a versão desfocada preenche as laterais.
-  function buildWallpaperLayers(wallpaper, { wallpaperDim, wallpaperFit, wallpaperPosition }) {
+  function buildWallpaperLayers(wallpaper, { wallpaperDim, wallpaperFit, wallpaperPositionX, wallpaperPosition }) {
     const dim = wallpaperDim / 100;
     const layers = [`linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim}))`];
     if (wallpaperFit === 'contain') {
       layers.push(`url("${wallpaper.dataUrl}") center / contain no-repeat`);
       if (wallpaper.blurDataUrl) layers.push(`url("${wallpaper.blurDataUrl}") center / cover no-repeat`);
     } else {
-      layers.push(`url("${wallpaper.dataUrl}") center ${wallpaperPosition}% / cover no-repeat`);
+      layers.push(`url("${wallpaper.dataUrl}") ${wallpaperPositionX}% ${wallpaperPosition}% / cover no-repeat`);
     }
     return layers.join(', ');
   }
@@ -73,6 +89,7 @@ globalThis.LyriLang ??= (() => {
       backgroundMode: 'color',
       wallpaperDim: DEFAULT_WALLPAPER_DIM,
       wallpaperFit: 'cover',
+      wallpaperPositionX: DEFAULT_WALLPAPER_POSITION,
       wallpaperPosition: DEFAULT_WALLPAPER_POSITION,
       textShadow: false,
     });
@@ -88,6 +105,7 @@ globalThis.LyriLang ??= (() => {
       backgroundMode: stored.backgroundMode === 'image' ? 'image' : 'color',
       wallpaperDim: clampInt(stored.wallpaperDim, 0, MAX_WALLPAPER_DIM, DEFAULT_WALLPAPER_DIM),
       wallpaperFit: WALLPAPER_FITS.includes(stored.wallpaperFit) ? stored.wallpaperFit : 'cover',
+      wallpaperPositionX: clampInt(stored.wallpaperPositionX, 0, 100, DEFAULT_WALLPAPER_POSITION),
       wallpaperPosition: clampInt(stored.wallpaperPosition, 0, 100, DEFAULT_WALLPAPER_POSITION),
       textShadow: stored.textShadow === true,
     };
@@ -109,11 +127,14 @@ globalThis.LyriLang ??= (() => {
     DEFAULT_WALLPAPER_DIM,
     MAX_WALLPAPER_DIM,
     WALLPAPER_FITS,
+    DEFAULT_WALLPAPER_POSITION,
+    LYRICS_AREA_KEY,
     isHexColor,
     isImageDataUrl,
     buildWallpaperLayers,
     getSettings,
     getWallpaper,
+    getLyricsArea,
     localizePage,
   };
 })();

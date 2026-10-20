@@ -4,11 +4,14 @@ const {
   WALLPAPER_KEY,
   MAX_WALLPAPER_DIM,
   WALLPAPER_FITS,
+  DEFAULT_WALLPAPER_POSITION,
+  LYRICS_AREA_KEY,
   isHexColor,
   isImageDataUrl,
   buildWallpaperLayers,
   getSettings,
   getWallpaper,
+  getLyricsArea,
   localizePage,
 } = globalThis.LyriLang;
 
@@ -26,6 +29,9 @@ const BLUR_RADIUS = 12;
 const PORTRAIT_RATIO = 1.2;
 // Acima desta ampliação estimada, avisamos que a imagem pode ficar borrada.
 const MAX_SHARP_UPSCALE = 1.2;
+// Altura máxima do seletor do ponto de foco (imagens em retrato).
+const FOCUS_MAX_HEIGHT = 280;
+const FOCUS_KEY_STEP = 5;
 
 const t = (key) => api.i18n.getMessage(key);
 const $ = (id) => document.getElementById(id);
@@ -42,9 +48,13 @@ const pickButton = $('pickImage');
 const removeButton = $('removeImage');
 const fileInput = $('imageFile');
 const imageError = $('imageError');
-const positionRow = $('positionRow');
-const positionInput = $('wallpaperPosition');
-const positionValue = $('positionValue');
+const focusRow = $('focusRow');
+const focusPicker = $('focusPicker');
+const focusImage = $('focusImage');
+const focusWindow = $('focusWindow');
+const focusDot = $('focusDot');
+const focusReset = $('focusReset');
+const noAreaNote = $('noAreaNote');
 const lowResNote = $('lowResNote');
 const dimInput = $('wallpaperDim');
 const dimValue = $('dimValue');
@@ -59,8 +69,10 @@ let colors = { ...DEFAULT_COLORS };
 let backgroundMode = 'color';
 let wallpaperDim = 0;
 let wallpaperFit = 'cover';
-let wallpaperPosition = 50;
+let wallpaperPositionX = DEFAULT_WALLPAPER_POSITION;
+let wallpaperPosition = DEFAULT_WALLPAPER_POSITION; // Y do ponto de foco
 let wallpaper = null; // { dataUrl, blurDataUrl, width, height }
+let lyricsArea = null; // { width, height, dpr }, medido no Spotify
 const saveTimers = {};
 
 function saveLater(key, getValue) {
@@ -73,20 +85,56 @@ function saveNow(key, value) {
   api.storage.sync.set({ [key]: value });
 }
 
-function positionLabel(value) {
-  if (value === 0) return t('positionTop');
-  if (value === 50) return t('positionCenter');
-  if (value === 100) return t('positionBottom');
-  return `${value}%`;
+function saveFocus({ later = false } = {}) {
+  clearTimeout(saveTimers.focus);
+  const save = () => api.storage.sync.set({ wallpaperPositionX, wallpaperPosition });
+  if (later) saveTimers.focus = setTimeout(save, SAVE_DELAY);
+  else save();
 }
 
-// Estima quanto a imagem será ampliada na área da letra desta tela (≈75% x 80% da tela).
+const clampPercent = (value) => Math.min(100, Math.max(0, Math.round(value)));
+
+// Área da letra medida no Spotify; sem medição, estima ≈75% x 80% da tela.
+function areaSize() {
+  return lyricsArea ?? { width: screen.width * 0.75, height: screen.height * 0.8, dpr: devicePixelRatio };
+}
+
+// Quanto a imagem será ampliada na área da letra.
 function estimatedUpscale() {
   if (!wallpaper?.width || !wallpaper?.height) return 0;
-  const areaWidth = screen.width * 0.75;
-  const areaHeight = screen.height * 0.8;
+  const area = areaSize();
   const fit = wallpaperFit === 'contain' ? Math.min : Math.max;
-  return fit(areaWidth / wallpaper.width, areaHeight / wallpaper.height) * devicePixelRatio;
+  return fit(area.width / wallpaper.width, area.height / wallpaper.height) * area.dpr;
+}
+
+// Fração da imagem (largura e altura) que aparece na área da letra no encaixe "Preencher".
+function visibleFraction() {
+  if (!wallpaper?.width || !wallpaper?.height) return { width: 1, height: 1 };
+  const area = areaSize();
+  const areaRatio = area.width / area.height;
+  const imageRatio = wallpaper.width / wallpaper.height;
+  return areaRatio < imageRatio
+    ? { width: areaRatio / imageRatio, height: 1 }
+    : { width: 1, height: imageRatio / areaRatio };
+}
+
+function renderFocus() {
+  focusRow.hidden = wallpaperFit !== 'cover' || !wallpaper;
+  if (focusRow.hidden) return;
+  if (focusImage.getAttribute('src') !== wallpaper.dataUrl) focusImage.src = wallpaper.dataUrl;
+  const ratio = wallpaper.width && wallpaper.height ? wallpaper.width / wallpaper.height : 16 / 9;
+  focusPicker.style.aspectRatio = String(ratio);
+  focusPicker.style.width = `min(100%, ${Math.round(FOCUS_MAX_HEIGHT * ratio)}px)`;
+
+  // Com background-position em %, o ponto (X%, Y%) da imagem fica no ponto (X%, Y%) da área,
+  // então a parte visível começa em (1 - fração) * posição.
+  const visible = visibleFraction();
+  focusWindow.style.width = `${visible.width * 100}%`;
+  focusWindow.style.height = `${visible.height * 100}%`;
+  focusWindow.style.left = `${(1 - visible.width) * wallpaperPositionX}%`;
+  focusWindow.style.top = `${(1 - visible.height) * wallpaperPosition}%`;
+  focusDot.style.left = `${wallpaperPositionX}%`;
+  focusDot.style.top = `${wallpaperPosition}%`;
 }
 
 function render() {
@@ -106,9 +154,7 @@ function render() {
   noImage.hidden = Boolean(wallpaper);
   removeButton.hidden = !wallpaper;
 
-  positionRow.hidden = wallpaperFit !== 'cover';
-  positionInput.value = wallpaperPosition;
-  positionValue.textContent = positionLabel(wallpaperPosition);
+  renderFocus();
   dimInput.value = wallpaperDim;
   dimValue.textContent = `${wallpaperDim}%`;
 
@@ -118,8 +164,11 @@ function render() {
 
   preview.style.backgroundImage = '';
   preview.style.background = imageMode && wallpaper
-    ? buildWallpaperLayers(wallpaper, { wallpaperDim, wallpaperFit, wallpaperPosition })
+    ? buildWallpaperLayers(wallpaper, { wallpaperDim, wallpaperFit, wallpaperPositionX, wallpaperPosition })
     : '';
+  const area = areaSize();
+  preview.style.aspectRatio = `${area.width} / ${area.height}`;
+  noAreaNote.hidden = Boolean(lyricsArea);
   preview.style.backgroundColor = 'var(--c-background)';
   preview.classList.toggle('shadow', shadowInput.checked);
 
@@ -215,9 +264,10 @@ fileInput.addEventListener('change', async () => {
     backgroundMode = 'image';
     // Fotos em retrato ou quadradas começam inteiras; paisagens preenchem a área.
     wallpaperFit = processed.width / processed.height < PORTRAIT_RATIO ? 'contain' : 'cover';
-    wallpaperPosition = 50;
+    wallpaperPositionX = DEFAULT_WALLPAPER_POSITION;
+    wallpaperPosition = DEFAULT_WALLPAPER_POSITION;
     render();
-    api.storage.sync.set({ backgroundMode, wallpaperFit, wallpaperPosition });
+    api.storage.sync.set({ backgroundMode, wallpaperFit, wallpaperPositionX, wallpaperPosition });
   } catch (err) {
     console.warn('[LyriLang] falha ao usar a imagem:', err);
     showImageError('imageError');
@@ -233,12 +283,45 @@ removeButton.addEventListener('click', async () => {
   saveNow('backgroundMode', backgroundMode);
 });
 
-positionInput.addEventListener('input', () => {
-  wallpaperPosition = Math.min(100, Math.max(0, Number(positionInput.value)));
+function setFocusFromPointer(event) {
+  const rect = focusPicker.getBoundingClientRect();
+  wallpaperPositionX = clampPercent(((event.clientX - rect.left) / rect.width) * 100);
+  wallpaperPosition = clampPercent(((event.clientY - rect.top) / rect.height) * 100);
   render();
-  saveLater('wallpaperPosition', () => wallpaperPosition);
+  saveFocus({ later: true });
+}
+
+// Elementos comuns dentro de um fieldset desativado continuam recebendo cliques;
+// os inputs já ficam desativados, mas o seletor do ponto de foco precisa conferir.
+focusPicker.addEventListener('pointerdown', (event) => {
+  if (fields.disabled || event.button !== 0) return;
+  focusPicker.setPointerCapture(event.pointerId);
+  setFocusFromPointer(event);
 });
-positionInput.addEventListener('change', () => saveNow('wallpaperPosition', wallpaperPosition));
+focusPicker.addEventListener('pointermove', (event) => {
+  if (focusPicker.hasPointerCapture(event.pointerId)) setFocusFromPointer(event);
+});
+focusPicker.addEventListener('pointerup', (event) => {
+  if (focusPicker.hasPointerCapture(event.pointerId)) saveFocus();
+});
+
+focusPicker.addEventListener('keydown', (event) => {
+  const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+  const move = moves[event.key];
+  if (!move || fields.disabled) return;
+  event.preventDefault();
+  wallpaperPositionX = clampPercent(wallpaperPositionX + move[0] * FOCUS_KEY_STEP);
+  wallpaperPosition = clampPercent(wallpaperPosition + move[1] * FOCUS_KEY_STEP);
+  render();
+  saveFocus({ later: true });
+});
+
+focusReset.addEventListener('click', () => {
+  wallpaperPositionX = DEFAULT_WALLPAPER_POSITION;
+  wallpaperPosition = DEFAULT_WALLPAPER_POSITION;
+  render();
+  saveFocus();
+});
 
 dimInput.addEventListener('input', () => {
   wallpaperDim = Math.min(MAX_WALLPAPER_DIM, Math.max(0, Number(dimInput.value)));
@@ -265,20 +348,28 @@ restoreButton.addEventListener('click', () => {
 });
 
 // Mantém o botão em sincronia se o popup mudar a opção com esta página aberta.
-api.storage.onChanged.addListener((changes, area) => {
+api.storage.onChanged.addListener(async (changes, area) => {
+  // A área da letra muda se o Spotify estiver aberto e a janela ou os painéis mudarem.
+  if (area === 'local' && LYRICS_AREA_KEY in changes) {
+    lyricsArea = await getLyricsArea();
+    render();
+    return;
+  }
   if (area !== 'sync' || !('customColors' in changes)) return;
   toggle.checked = changes.customColors.newValue === true;
   render();
 });
 
 localizePage();
-Promise.all([getSettings(), getWallpaper()]).then(([settings, storedWallpaper]) => {
+Promise.all([getSettings(), getWallpaper(), getLyricsArea()]).then(([settings, storedWallpaper, storedArea]) => {
   colors = settings.colors;
   backgroundMode = settings.backgroundMode;
   wallpaperDim = settings.wallpaperDim;
   wallpaperFit = settings.wallpaperFit;
+  wallpaperPositionX = settings.wallpaperPositionX;
   wallpaperPosition = settings.wallpaperPosition;
   wallpaper = storedWallpaper;
+  lyricsArea = storedArea;
   toggle.checked = settings.customColors;
   shadowInput.checked = settings.textShadow;
   syncColorInputs();

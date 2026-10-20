@@ -1,11 +1,12 @@
 (() => {
-  const { api, getSettings, getWallpaper, buildWallpaperLayers, WALLPAPER_KEY } = globalThis.LyriLang;
+  const { api, getSettings, getWallpaper, buildWallpaperLayers, WALLPAPER_KEY, LYRICS_AREA_KEY } = globalThis.LyriLang;
 
   const LINE_SELECTOR = '[data-testid="lyrics-line"]';
   const TR_CLASS = 'lyrilang-tr';
   const REQUEST_DELAY = 150;
   const MAX_RETRY_DELAY = 60_000;
   const MAX_CACHED_LINES = 3000;
+  const AREA_SAVE_DELAY = 500;
 
   const COLORS_STYLE_ID = 'lyrilang-colors';
   const WALLPAPER_ATTR = 'data-lyrilang-wallpaper';
@@ -14,13 +15,16 @@
   const MAIN_HOLDER_SELECTOR =
     '[style*="--lyrics-color-background"]:not([data-testid="lyrics-npv-section"])';
   const APPEARANCE_KEYS = [
-    'customColors', 'colors', 'backgroundMode', 'wallpaperDim', 'wallpaperFit', 'wallpaperPosition', 'textShadow',
+    'customColors', 'colors', 'backgroundMode', 'wallpaperDim', 'wallpaperFit', 'wallpaperPositionX', 'wallpaperPosition',
+    'textShadow',
   ];
 
   let settings = { enabled: false, targetLang: 'en', customColors: false, colors: null };
   let wallpaper = null; // { dataUrl, blurDataUrl, width, height }
-  let wallpaperScroller = null;
-  let wallpaperCheckPending = false;
+  let lyricsScroller = null; // elemento que rola a letra; recebe o wallpaper
+  let scrollerCheckPending = false;
+  let areaTimer = null;
+  let savedArea = '';
   const translations = new Map(); // linha original -> tradução ('' = sem tradução)
   const pending = new Set();
   let generation = 0; // muda quando o idioma ou o liga/desliga mudam
@@ -28,7 +32,7 @@
   let retryDelay = 0;
 
   const observer = new MutationObserver(() => {
-    if (wallpaperActive()) scheduleWallpaperCheck();
+    scheduleScrollerCheck();
     if (!settings.enabled) return;
     // Síncrono: o Spotify recria as linhas o tempo todo e a tradução não pode piscar.
     applyAll();
@@ -141,7 +145,7 @@
     let style = document.getElementById(COLORS_STYLE_ID);
     if (!settings.customColors) {
       style?.remove();
-      markWallpaperScroller();
+      updateLyricsScroller();
       return;
     }
     if (!style) {
@@ -169,42 +173,64 @@
       rules.push(`${MAIN_HOLDER_SELECTOR} ${LINE_SELECTOR} { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }`);
     }
     style.textContent = rules.join('\n');
-    markWallpaperScroller();
+    updateLyricsScroller();
   }
 
   // A imagem vai no elemento que rola a letra: o fundo de um elemento com rolagem
   // fica parado enquanto o conteúdo passa por cima, como um papel de parede.
-  function markWallpaperScroller() {
-    const holder = wallpaperActive() ? document.querySelector(MAIN_HOLDER_SELECTOR) : null;
-    if (!(holder && wallpaperScroller?.isConnected && wallpaperScroller.contains(holder))) {
-      wallpaperScroller?.removeAttribute(WALLPAPER_ATTR);
-      wallpaperScroller = holder ? findScrollParent(holder) : null;
-      wallpaperScroller?.setAttribute(WALLPAPER_ATTR, '');
+  // O tamanho dele é guardado para a página de opções mostrar o recorte real.
+  function updateLyricsScroller() {
+    const holder = document.querySelector(MAIN_HOLDER_SELECTOR);
+    if (!(holder && lyricsScroller?.isConnected && lyricsScroller.contains(holder))) {
+      lyricsScroller?.removeAttribute(WALLPAPER_ATTR);
+      areaObserver.disconnect();
+      lyricsScroller = holder ? findScrollParent(holder) : null;
+      if (lyricsScroller) areaObserver.observe(lyricsScroller);
     }
-    clearCoveringLayers(holder);
+    const active = wallpaperActive() && lyricsScroller;
+    if (active) lyricsScroller.setAttribute(WALLPAPER_ATTR, '');
+    else lyricsScroller?.removeAttribute(WALLPAPER_ATTR);
+    clearCoveringLayers(active ? holder : null);
   }
 
   // O Spotify muda as camadas o tempo todo; verifica no máximo uma vez por quadro.
-  function scheduleWallpaperCheck() {
-    if (wallpaperCheckPending) return;
-    wallpaperCheckPending = true;
+  function scheduleScrollerCheck() {
+    if (scrollerCheckPending) return;
+    scrollerCheckPending = true;
     requestAnimationFrame(() => {
-      wallpaperCheckPending = false;
-      markWallpaperScroller();
+      scrollerCheckPending = false;
+      updateLyricsScroller();
     });
+  }
+
+  // A área muda com o tamanho da janela e com os painéis laterais do Spotify abertos.
+  const areaObserver = new ResizeObserver(() => {
+    clearTimeout(areaTimer);
+    areaTimer = setTimeout(saveLyricsArea, AREA_SAVE_DELAY);
+  });
+
+  function saveLyricsArea() {
+    const width = lyricsScroller?.clientWidth;
+    const height = lyricsScroller?.clientHeight;
+    if (!width || !height || !api.runtime?.id) return;
+    const area = { width, height, dpr: devicePixelRatio };
+    const key = JSON.stringify(area);
+    if (key === savedArea) return;
+    savedArea = key;
+    api.storage.local.set({ [LYRICS_AREA_KEY]: area }).catch(() => {});
   }
 
   // Camadas grandes do Spotify entre o elemento que rola e a letra, que pintam um fundo
   // próprio (ex.: o degradê do "modo cinema" em faixas com videoclipe), cobririam a imagem.
   function clearCoveringLayers(holder) {
     const covering = new Set();
-    if (holder && wallpaperScroller) {
-      const minWidth = wallpaperScroller.clientWidth * 0.9;
-      const minHeight = wallpaperScroller.clientHeight * 0.5;
-      for (let node = holder; node && node !== wallpaperScroller; node = node.parentElement) {
+    if (holder && lyricsScroller) {
+      const minWidth = lyricsScroller.clientWidth * 0.9;
+      const minHeight = lyricsScroller.clientHeight * 0.5;
+      for (let node = holder; node && node !== lyricsScroller; node = node.parentElement) {
         const parent = node.parentElement;
         if (!parent) break;
-        const candidates = parent === wallpaperScroller ? [...parent.children] : [parent, ...parent.children];
+        const candidates = parent === lyricsScroller ? [...parent.children] : [parent, ...parent.children];
         for (const el of candidates) {
           if (el === holder || holder.contains(el)) continue;
           if (paintsLargeBackground(el, minWidth, minHeight)) covering.add(el);

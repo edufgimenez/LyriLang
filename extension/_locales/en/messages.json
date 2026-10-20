@@ -90,17 +90,17 @@
   "fitContain": {
     "message": "Whole image"
   },
-  "wallpaperPosition": {
-    "message": "Vertical position"
+  "focusPoint": {
+    "message": "Focus point"
   },
-  "positionTop": {
-    "message": "Top"
+  "focusHint": {
+    "message": "Click or drag on the image to choose the part that must always stay visible. The highlighted area is what fits in the lyrics area."
   },
-  "positionCenter": {
+  "focusReset": {
     "message": "Center"
   },
-  "positionBottom": {
-    "message": "Bottom"
+  "focusNoArea": {
+    "message": "Open the lyrics on Spotify once so the preview uses the real size of the lyrics area."
   },
   "lowResCover": {
     "message": "This image has a low resolution for your screen and may look blurry. The \"Whole image\" fit helps."

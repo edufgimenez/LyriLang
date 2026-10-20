@@ -57,11 +57,19 @@
             <label><input type="radio" name="wallpaperFit" value="contain"><span data-i18n="fitContain"></span></label>
           </div>
         </div>
-        <label id="positionRow" class="range-row">
-          <span data-i18n="wallpaperPosition"></span>
-          <input id="wallpaperPosition" type="range" min="0" max="100" step="5">
-          <output id="positionValue" for="wallpaperPosition"></output>
-        </label>
+        <div id="focusRow" class="focus-row">
+          <div class="focus-head">
+            <span id="focusLabel" data-i18n="focusPoint"></span>
+            <button id="focusReset" type="button" class="link" data-i18n="focusReset"></button>
+          </div>
+          <div id="focusPicker" class="focus-picker" tabindex="0" role="group"
+               aria-labelledby="focusLabel" aria-describedby="focusHint">
+            <img id="focusImage" alt="" draggable="false">
+            <div id="focusWindow" class="focus-window"></div>
+            <div id="focusDot" class="focus-dot"></div>
+          </div>
+          <p id="focusHint" class="note" data-i18n="focusHint"></p>
+        </div>
         <p id="lowResNote" class="note warn" hidden></p>
         <label class="range-row">
           <span data-i18n="dimImage"></span>
@@ -89,6 +97,7 @@
     </fieldset>
 
     <p class="preview-label" data-i18n="previewLabel"></p>
+    <p id="noAreaNote" class="note" data-i18n="focusNoArea" hidden></p>
     <div id="preview" class="preview" aria-hidden="true">
       <div class="line passed" data-i18n="previewPassed"></div>
       <div class="line active">

@@ -90,17 +90,17 @@
   "fitContain": {
     "message": "Imagem inteira"
   },
-  "wallpaperPosition": {
-    "message": "Posição vertical"
+  "focusPoint": {
+    "message": "Ponto de foco"
   },
-  "positionTop": {
-    "message": "Topo"
+  "focusHint": {
+    "message": "Clique ou arraste na imagem para escolher a parte que deve ficar sempre visível. A área destacada é o que cabe na área da letra."
   },
-  "positionCenter": {
-    "message": "Centro"
+  "focusReset": {
+    "message": "Centralizar"
   },
-  "positionBottom": {
-    "message": "Base"
+  "focusNoArea": {
+    "message": "Abra a letra no Spotify uma vez para a prévia usar o tamanho real da área da letra."
   },
   "lowResCover": {
     "message": "Esta imagem tem pouca resolução para a sua tela e pode ficar borrada. O encaixe \"Imagem inteira\" ajuda."
