@@ -43,28 +43,88 @@
     "message": "Could not clear"
   },
   "customColors": {
-    "message": "Use my colors"
+    "message": "Use my look"
   },
   "customizeColors": {
-    "message": "Customize colors"
+    "message": "Customize look"
   },
   "optionsPageTitle": {
-    "message": "LyriLang – Lyrics colors"
+    "message": "LyriLang – Lyrics look"
   },
   "optionsTitle": {
-    "message": "Lyrics colors"
+    "message": "Lyrics look"
   },
   "optionsIntro": {
-    "message": "Replaces the colors Spotify generates from the album cover. Applies to the lyrics view and the side panel, and changes show up right away."
+    "message": "Replaces the colors Spotify generates from the album cover with your own colors or an image. Applies to the lyrics view (the side panel uses the background color), and changes show up right away."
   },
-  "colorBackground": {
+  "backgroundLabel": {
     "message": "Background"
   },
+  "bgModeColor": {
+    "message": "Color"
+  },
+  "bgModeImage": {
+    "message": "Image"
+  },
+  "noImage": {
+    "message": "No image chosen"
+  },
+  "chooseImage": {
+    "message": "Choose image…"
+  },
+  "removeImage": {
+    "message": "Remove"
+  },
+  "imageError": {
+    "message": "Could not use this image. Try a JPG, PNG or WebP file."
+  },
+  "imageTooLarge": {
+    "message": "This image is too large (max. 25 MB)."
+  },
+  "wallpaperFit": {
+    "message": "Fit"
+  },
+  "fitCover": {
+    "message": "Fill"
+  },
+  "fitContain": {
+    "message": "Whole image"
+  },
+  "wallpaperPosition": {
+    "message": "Vertical position"
+  },
+  "positionTop": {
+    "message": "Top"
+  },
+  "positionCenter": {
+    "message": "Center"
+  },
+  "positionBottom": {
+    "message": "Bottom"
+  },
+  "lowResCover": {
+    "message": "This image has a low resolution for your screen and may look blurry. The \"Whole image\" fit helps."
+  },
+  "lowResContain": {
+    "message": "This image has a low resolution for your screen and may look a bit blurry."
+  },
+  "dimImage": {
+    "message": "Darken image"
+  },
+  "imageLocalNote": {
+    "message": "The image stays only in this browser: it is not sent anywhere or synced to other devices."
+  },
+  "textShadow": {
+    "message": "Text shadow (easier to read)"
+  },
+  "colorBackground": {
+    "message": "Background color"
+  },
   "colorActive": {
-    "message": "Current and sung lines"
+    "message": "Current line"
   },
   "colorInactive": {
-    "message": "Upcoming lines"
+    "message": "Other lines"
   },
   "previewLabel": {
     "message": "Preview"

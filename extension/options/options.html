@@ -25,11 +25,52 @@
     </label>
 
     <fieldset id="colorFields">
-      <label class="color-row">
+      <div class="mode-row">
+        <span data-i18n="backgroundLabel"></span>
+        <div class="segmented" role="radiogroup">
+          <label><input type="radio" name="backgroundMode" value="color"><span data-i18n="bgModeColor"></span></label>
+          <label><input type="radio" name="backgroundMode" value="image"><span data-i18n="bgModeImage"></span></label>
+        </div>
+      </div>
+
+      <label id="bgColorRow" class="color-row">
         <span data-i18n="colorBackground"></span>
         <code data-hex="background"></code>
         <input type="color" data-color="background">
       </label>
+
+      <div id="imageRows" class="image-rows" hidden>
+        <div class="image-picker">
+          <img id="wallpaperThumb" class="thumb" alt="" hidden>
+          <span id="noImage" class="muted" data-i18n="noImage"></span>
+          <div class="image-actions">
+            <button id="pickImage" type="button" class="secondary small" data-i18n="chooseImage"></button>
+            <button id="removeImage" type="button" class="link" data-i18n="removeImage" hidden></button>
+          </div>
+          <input id="imageFile" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" tabindex="-1">
+        </div>
+        <p id="imageError" class="error" role="alert" hidden></p>
+        <div class="mode-row">
+          <span data-i18n="wallpaperFit"></span>
+          <div class="segmented" role="radiogroup">
+            <label><input type="radio" name="wallpaperFit" value="cover"><span data-i18n="fitCover"></span></label>
+            <label><input type="radio" name="wallpaperFit" value="contain"><span data-i18n="fitContain"></span></label>
+          </div>
+        </div>
+        <label id="positionRow" class="range-row">
+          <span data-i18n="wallpaperPosition"></span>
+          <input id="wallpaperPosition" type="range" min="0" max="100" step="5">
+          <output id="positionValue" for="wallpaperPosition"></output>
+        </label>
+        <p id="lowResNote" class="note warn" hidden></p>
+        <label class="range-row">
+          <span data-i18n="dimImage"></span>
+          <input id="wallpaperDim" type="range" min="0" max="80" step="5">
+          <output id="dimValue" for="wallpaperDim"></output>
+        </label>
+        <p class="note" data-i18n="imageLocalNote"></p>
+      </div>
+
       <label class="color-row">
         <span data-i18n="colorActive"></span>
         <code data-hex="active"></code>
@@ -39,6 +80,11 @@
         <span data-i18n="colorInactive"></span>
         <code data-hex="inactive"></code>
         <input type="color" data-color="inactive">
+      </label>
+
+      <label class="check-row">
+        <input id="textShadow" type="checkbox">
+        <span data-i18n="textShadow"></span>
       </label>
     </fieldset>
 
