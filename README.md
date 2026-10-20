@@ -4,6 +4,8 @@ Extensão de navegador que mostra, abaixo de cada linha da letra no [Spotify Web
 
 Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos.
 
+> O LyriLang é um projeto independente e não é afiliado, patrocinado nem endossado pelo Spotify.
+
 ## Como funciona
 
 - `extension/src/content.js` observa a página do Spotify, lê as linhas (`[data-testid="lyrics-line"]`) e coloca a tradução dentro de cada linha. Como o Spotify recria essas linhas o tempo todo, a tradução é reaplicada a partir de um mapa em memória.

@@ -130,6 +130,13 @@ input[type="checkbox"][role="switch"]:checked::after {
   border-top: 1px solid var(--border);
 }
 
+.disclaimer {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+
 .status {
   color: var(--muted);
   font-size: 12px;
