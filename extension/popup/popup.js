@@ -46,24 +46,38 @@ grantButton.addEventListener('click', () => {
   api.permissions.request({ origins }).then(refreshPermission);
 });
 
+// O resultado aparece no próprio botão por alguns segundos, sem mudar o layout.
+const CLEAR_FEEDBACK_MS = 2500;
+
 clearCacheButton.addEventListener('click', async () => {
   clearCacheButton.disabled = true;
+  let message;
+  let ok = false;
   try {
     const res = await api.runtime.sendMessage({ type: 'clearCache' });
     if (!res || res.error) throw new Error(res?.error);
-    cacheStatus.textContent =
+    message =
       res.removed === 0 ? t('cacheClearedNone')
         : res.removed === 1 ? t('cacheClearedOne')
           : t('cacheClearedMany', String(res.removed));
+    ok = true;
   } catch {
-    cacheStatus.textContent = t('cacheClearFailed');
-  } finally {
-    clearCacheButton.disabled = false;
+    message = t('cacheClearFailed');
   }
+  clearCacheButton.textContent = ok ? `✓ ${message}` : message;
+  clearCacheButton.classList.toggle('done', ok);
+  cacheStatus.textContent = message;
+  setTimeout(() => {
+    clearCacheButton.textContent = t('clearCache');
+    clearCacheButton.classList.remove('done');
+    clearCacheButton.disabled = false;
+  }, CLEAR_FEEDBACK_MS);
 });
 
+const manifest = api.runtime.getManifest();
 localize();
-document.getElementById('about').href = api.runtime.getManifest().homepage_url;
+document.getElementById('about').href = manifest.homepage_url;
+document.getElementById('version').textContent = `v${manifest.version}`;
 fillLanguages();
 getSettings().then(({ enabled, targetLang }) => {
   enabledInput.checked = enabled;

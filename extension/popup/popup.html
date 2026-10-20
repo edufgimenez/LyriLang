@@ -28,13 +28,14 @@
 
   <p class="hint" data-i18n="hint"></p>
 
-  <div class="cache">
-    <button id="clearCache" type="button" class="secondary" data-i18n="clearCache"></button>
-    <span id="cacheStatus" class="status" role="status"></span>
-  </div>
+  <button id="clearCache" type="button" class="secondary" data-i18n="clearCache"></button>
+  <span id="cacheStatus" class="visually-hidden" role="status"></span>
 
   <footer>
-    <a id="about" target="_blank" rel="noopener" data-i18n="aboutProject"></a>
+    <div class="footer-row">
+      <a id="about" target="_blank" rel="noopener"><span data-i18n="aboutProject"></span> ↗</a>
+      <span id="version" class="version"></span>
+    </div>
     <p class="disclaimer" data-i18n="disclaimer"></p>
   </footer>
 
