@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "homepage_url": "https://github.com/edufgimenez/LyriLang",
@@ -22,6 +22,10 @@
       "run_at": "document_idle"
     }
   ],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_title": "__MSG_extName__",
     "default_popup": "popup/popup.html",

@@ -1,6 +1,8 @@
-const { api, LANGUAGES, getSettings } = globalThis.LyriLang;
+const { api, LANGUAGES, getSettings, localizePage } = globalThis.LyriLang;
 
 const enabledInput = document.getElementById('enabled');
+const customColorsInput = document.getElementById('customColors');
+const openOptionsButton = document.getElementById('openOptions');
 const langSelect = document.getElementById('targetLang');
 const permissionBox = document.getElementById('permission');
 const grantButton = document.getElementById('grant');
@@ -10,13 +12,6 @@ const cacheStatus = document.getElementById('cacheStatus');
 const origins = api.runtime.getManifest().host_permissions;
 const uiLang = api.i18n.getUILanguage?.() || 'en';
 const t = (key, ...subs) => api.i18n.getMessage(key, subs);
-
-function localize() {
-  document.documentElement.lang = uiLang;
-  for (const el of document.querySelectorAll('[data-i18n]')) {
-    el.textContent = t(el.dataset.i18n);
-  }
-}
 
 function fillLanguages() {
   const names = new Intl.DisplayNames([uiLang], { type: 'language' });
@@ -39,6 +34,16 @@ enabledInput.addEventListener('change', () => {
 
 langSelect.addEventListener('change', () => {
   api.storage.sync.set({ targetLang: langSelect.value });
+});
+
+customColorsInput.addEventListener('change', () => {
+  api.storage.sync.set({ customColors: customColorsInput.checked });
+});
+
+// O seletor de cor nativo fecha o popup no Firefox, então as cores ficam na página de opções.
+openOptionsButton.addEventListener('click', () => {
+  api.runtime.openOptionsPage();
+  window.close();
 });
 
 // permissions.request precisa ser chamado direto no clique, sem await antes.
@@ -75,12 +80,13 @@ clearCacheButton.addEventListener('click', async () => {
 });
 
 const manifest = api.runtime.getManifest();
-localize();
+localizePage();
 document.getElementById('about').href = manifest.homepage_url;
 document.getElementById('version').textContent = `v${manifest.version}`;
 fillLanguages();
-getSettings().then(({ enabled, targetLang }) => {
+getSettings().then(({ enabled, targetLang, customColors }) => {
   enabledInput.checked = enabled;
   langSelect.value = targetLang;
+  customColorsInput.checked = customColors;
 });
 refreshPermission();
