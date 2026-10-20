@@ -22,6 +22,7 @@ Works on Firefox (142+) and Chrome (121+) with the same files. The extension int
 ```
 extension/   ← the extension itself (what goes into the zip, for Firefox and Chrome)
   _locales/  ← interface texts (en, pt_BR)
+assets/      ← icon source (1024px) and the previous icon (legacy-icon/), not included in the zip
 docs/        ← project documents (not included in the zip)
 ```
 
