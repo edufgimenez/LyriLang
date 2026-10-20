@@ -5,8 +5,15 @@ const CHUNK_CHARS = 4500;
 const LINE_CONCURRENCY = 4;
 const CACHE_PREFIX = 'tr:';
 const CACHE_MAX_ENTRIES = 200;
+const CACHE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 dias
 
 api.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type === 'clearCache') {
+    clearCache()
+      .then((removed) => sendResponse({ removed }))
+      .catch((err) => sendResponse({ error: String(err?.message ?? err) }));
+    return true;
+  }
   if (msg?.type !== 'translate') return false;
   if (!isValidTranslateRequest(msg)) {
     sendResponse({ error: 'requisição de tradução inválida' });
@@ -34,7 +41,7 @@ async function translateLines(lines, target) {
   const key = CACHE_PREFIX + target + ':' + (await sha1(unique.join('\n')));
 
   let entry = (await api.storage.local.get(key))[key];
-  if (!entry) {
+  if (!entry || isExpired(entry)) {
     const { translations, detected } = await translate(unique, target);
     entry = { t: translations, d: detected, at: Date.now() };
     await api.storage.local.set({ [key]: entry });
@@ -120,11 +127,27 @@ async function sha1(text) {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function pruneCache() {
+function isExpired(entry) {
+  return !(Date.now() - entry.at <= CACHE_MAX_AGE);
+}
+
+async function getCacheEntries() {
   const all = await api.storage.local.get(null);
-  const entries = Object.entries(all).filter(([k]) => k.startsWith(CACHE_PREFIX));
-  if (entries.length <= CACHE_MAX_ENTRIES) return;
-  entries.sort(([, a], [, b]) => a.at - b.at);
-  const stale = entries.slice(0, entries.length - CACHE_MAX_ENTRIES).map(([k]) => k);
-  await api.storage.local.remove(stale);
+  return Object.entries(all).filter(([k]) => k.startsWith(CACHE_PREFIX));
+}
+
+// Apaga as entradas vencidas e, se ainda passar do limite, as mais antigas.
+async function pruneCache() {
+  const entries = await getCacheEntries();
+  const expired = entries.filter(([, e]) => isExpired(e));
+  const fresh = entries.filter(([, e]) => !isExpired(e)).sort(([, a], [, b]) => a.at - b.at);
+  const overflow = fresh.slice(0, Math.max(0, fresh.length - CACHE_MAX_ENTRIES));
+  const stale = [...expired, ...overflow].map(([k]) => k);
+  if (stale.length) await api.storage.local.remove(stale);
+}
+
+async function clearCache() {
+  const keys = (await getCacheEntries()).map(([k]) => k);
+  if (keys.length) await api.storage.local.remove(keys);
+  return keys.length;
 }

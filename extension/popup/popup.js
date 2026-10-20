@@ -4,6 +4,8 @@ const enabledInput = document.getElementById('enabled');
 const langSelect = document.getElementById('targetLang');
 const permissionBox = document.getElementById('permission');
 const grantButton = document.getElementById('grant');
+const clearCacheButton = document.getElementById('clearCache');
+const cacheStatus = document.getElementById('cacheStatus');
 
 const origins = api.runtime.getManifest().host_permissions;
 
@@ -34,6 +36,22 @@ langSelect.addEventListener('change', () => {
 // permissions.request precisa ser chamado direto no clique, sem await antes.
 grantButton.addEventListener('click', () => {
   api.permissions.request({ origins }).then(refreshPermission);
+});
+
+clearCacheButton.addEventListener('click', async () => {
+  clearCacheButton.disabled = true;
+  try {
+    const res = await api.runtime.sendMessage({ type: 'clearCache' });
+    if (!res || res.error) throw new Error(res?.error);
+    cacheStatus.textContent =
+      res.removed === 0 ? 'Nada para limpar'
+        : res.removed === 1 ? '1 música removida'
+          : `${res.removed} músicas removidas`;
+  } catch {
+    cacheStatus.textContent = 'Não foi possível limpar';
+  } finally {
+    clearCacheButton.disabled = false;
+  }
 });
 
 fillLanguages();
