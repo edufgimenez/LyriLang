@@ -121,10 +121,10 @@
     "message": "Background color"
   },
   "colorActive": {
-    "message": "Current and sung lines"
+    "message": "Current line"
   },
   "colorInactive": {
-    "message": "Upcoming lines"
+    "message": "Other lines"
   },
   "previewLabel": {
     "message": "Preview"

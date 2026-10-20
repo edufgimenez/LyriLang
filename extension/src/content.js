@@ -153,7 +153,7 @@
     const rules = [`[style*="--lyrics-color-background"] {
   --lyrics-color-background: ${background} !important;
   --lyrics-color-active: ${active} !important;
-  --lyrics-color-passed: ${active} !important;
+  --lyrics-color-passed: ${inactive} !important;
   --lyrics-color-inactive: ${inactive} !important;
   --lyrics-color-messaging: ${inactive} !important;
 }`];

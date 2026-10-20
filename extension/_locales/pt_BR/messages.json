@@ -121,10 +121,10 @@
     "message": "Cor de fundo"
   },
   "colorActive": {
-    "message": "Linha atual e já cantadas"
+    "message": "Linha atual"
   },
   "colorInactive": {
-    "message": "Próximas linhas"
+    "message": "Outras linhas"
   },
   "previewLabel": {
     "message": "Prévia"

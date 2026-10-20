@@ -281,13 +281,18 @@ button.secondary.small {
   margin-top: 14px;
 }
 
-.preview .passed,
 .preview .active {
   color: var(--c-active);
 }
 
 .preview .inactive {
   color: var(--c-inactive);
+}
+
+/* O Spotify mostra as linhas já cantadas com a cor das outras linhas, mais apagadas. */
+.preview .passed {
+  color: var(--c-inactive);
+  opacity: 0.55;
 }
 
 input[type="checkbox"][role="switch"] {

@@ -7,7 +7,7 @@ globalThis.LyriLang ??= (() => {
     'nl', 'pl', 'tr', 'ar', 'hi', 'sv', 'uk', 'id', 'he', 'el',
   ];
 
-  // Cores da letra: fundo, linha atual (e já cantadas) e próximas linhas.
+  // Cores da letra: fundo, linha atual e outras linhas (próximas e já cantadas).
   const DEFAULT_COLORS = { background: '#163041', active: '#ffffff', inactive: '#9fb3c8' };
 
   const isHexColor = (value) => typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
