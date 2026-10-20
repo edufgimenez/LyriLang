@@ -4,9 +4,13 @@
   "private": true,
   "description": "Extensão que mostra a tradução das letras do Spotify Web abaixo da linha original.",
   "scripts": {
-    "lint": "web-ext lint --ignore-files package.json package-lock.json README.md LICENSE",
+    "lint": "web-ext lint",
     "start": "web-ext run --start-url https://open.spotify.com",
-    "build": "web-ext build --overwrite-dest --ignore-files package.json package-lock.json README.md"
+    "build": "web-ext build --overwrite-dest"
+  },
+  "webExt": {
+    "sourceDir": "extension",
+    "artifactsDir": "web-ext-artifacts"
   },
   "devDependencies": {
     "web-ext": "^10.8.0"
