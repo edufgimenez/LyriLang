@@ -1,0 +1,48 @@
+{
+  "extName": {
+    "message": "LyriLang"
+  },
+  "extDescription": {
+    "message": "Mostra a tradução de cada linha da letra no Spotify Web. As linhas são enviadas ao Google Tradutor.",
+    "description": "Descrição da extensão no navegador e na loja (máx. 132 caracteres)."
+  },
+  "permissionText": {
+    "message": "A extensão precisa de acesso ao Spotify Web e ao tradutor."
+  },
+  "grantAccess": {
+    "message": "Conceder acesso"
+  },
+  "showTranslation": {
+    "message": "Mostrar tradução"
+  },
+  "translateTo": {
+    "message": "Traduzir para"
+  },
+  "hint": {
+    "message": "Abra a letra de uma música no Spotify Web. A tradução aparece abaixo de cada linha."
+  },
+  "clearCache": {
+    "message": "Limpar traduções salvas"
+  },
+  "cacheClearedNone": {
+    "message": "Nada para limpar"
+  },
+  "cacheClearedOne": {
+    "message": "1 música removida"
+  },
+  "cacheClearedMany": {
+    "message": "$COUNT$ músicas removidas",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "12"
+      }
+    }
+  },
+  "cacheClearFailed": {
+    "message": "Não foi possível limpar"
+  },
+  "disclaimer": {
+    "message": "Projeto independente, não afiliado ao Spotify."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "extName": {
+    "message": "LyriLang"
+  },
+  "extDescription": {
+    "message": "Shows a translation below each lyric line on Spotify Web. The lines are sent to Google Translate.",
+    "description": "Extension description shown in the browser and in the add-on store (max. 132 characters)."
+  },
+  "permissionText": {
+    "message": "The extension needs access to Spotify Web and to the translator."
+  },
+  "grantAccess": {
+    "message": "Grant access"
+  },
+  "showTranslation": {
+    "message": "Show translation"
+  },
+  "translateTo": {
+    "message": "Translate to"
+  },
+  "hint": {
+    "message": "Open the lyrics of a song on Spotify Web. The translation appears below each line."
+  },
+  "clearCache": {
+    "message": "Clear saved translations"
+  },
+  "cacheClearedNone": {
+    "message": "Nothing to clear"
+  },
+  "cacheClearedOne": {
+    "message": "1 song removed"
+  },
+  "cacheClearedMany": {
+    "message": "$COUNT$ songs removed",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "12"
+      }
+    }
+  },
+  "cacheClearFailed": {
+    "message": "Could not clear"
+  },
+  "disclaimer": {
+    "message": "Independent project, not affiliated with Spotify."
+  }
+}

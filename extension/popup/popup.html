@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>LyriLang</title>
@@ -12,28 +12,28 @@
   </header>
 
   <section id="permission" class="permission" hidden>
-    <p>A extensão precisa de acesso ao Spotify Web e ao tradutor.</p>
-    <button id="grant" type="button">Conceder acesso</button>
+    <p data-i18n="permissionText"></p>
+    <button id="grant" type="button" data-i18n="grantAccess"></button>
   </section>
 
   <label class="row">
-    <span>Mostrar tradução</span>
+    <span data-i18n="showTranslation"></span>
     <input id="enabled" type="checkbox" role="switch">
   </label>
 
   <label class="field">
-    <span>Traduzir para</span>
+    <span data-i18n="translateTo"></span>
     <select id="targetLang"></select>
   </label>
 
-  <p class="hint">Abra a letra de uma música no Spotify Web. A tradução aparece abaixo de cada linha.</p>
+  <p class="hint" data-i18n="hint"></p>
 
   <div class="cache">
-    <button id="clearCache" type="button" class="secondary">Limpar traduções salvas</button>
+    <button id="clearCache" type="button" class="secondary" data-i18n="clearCache"></button>
     <span id="cacheStatus" class="status" role="status"></span>
   </div>
 
-  <p class="disclaimer">Projeto independente, não afiliado ao Spotify.</p>
+  <p class="disclaimer" data-i18n="disclaimer"></p>
 
   <script src="../src/shared.js"></script>
   <script src="popup.js"></script>
