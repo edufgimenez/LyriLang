@@ -63,6 +63,7 @@ clearCacheButton.addEventListener('click', async () => {
 });
 
 localize();
+document.getElementById('about').href = api.runtime.getManifest().homepage_url;
 fillLanguages();
 getSettings().then(({ enabled, targetLang }) => {
   enabledInput.checked = enabled;

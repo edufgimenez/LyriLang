@@ -42,6 +42,9 @@
   "cacheClearFailed": {
     "message": "Could not clear"
   },
+  "aboutProject": {
+    "message": "About the project"
+  },
   "disclaimer": {
     "message": "Independent project, not affiliated with Spotify."
   }

@@ -42,6 +42,9 @@
   "cacheClearFailed": {
     "message": "Não foi possível limpar"
   },
+  "aboutProject": {
+    "message": "Sobre o projeto"
+  },
   "disclaimer": {
     "message": "Projeto independente, não afiliado ao Spotify."
   }
