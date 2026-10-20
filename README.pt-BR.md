@@ -22,6 +22,7 @@ Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos. A interfac
 ```
 extension/   ← a extensão em si (é o que vai no zip, para Firefox e Chrome)
   _locales/  ← textos da interface (en, pt_BR)
+assets/      ← fonte do ícone (1024px) e o ícone anterior (legacy-icon/), não entram no zip
 docs/        ← documentos do projeto (não entram no zip)
 ```
 
