@@ -12,6 +12,19 @@ globalThis.LyriLang ??= (() => {
 
   const isHexColor = (value) => typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
 
+  // Wallpaper: a imagem fica só no storage.local (grande demais para o sync).
+  const WALLPAPER_KEY = 'wallpaper';
+  const DEFAULT_WALLPAPER_DIM = 40; // % de escurecimento sobre a imagem
+  const MAX_WALLPAPER_DIM = 80;
+
+  const isImageDataUrl = (value) =>
+    typeof value === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
+
+  async function getWallpaper() {
+    const { [WALLPAPER_KEY]: stored } = await api.storage.local.get(WALLPAPER_KEY);
+    return isImageDataUrl(stored?.dataUrl) ? stored.dataUrl : null;
+  }
+
   function defaultLang() {
     const ui = api.i18n.getUILanguage?.() || 'en';
     if (LANGUAGES.includes(ui)) return ui;
@@ -26,16 +39,25 @@ globalThis.LyriLang ??= (() => {
       targetLang: null,
       customColors: false,
       colors: null,
+      backgroundMode: 'color',
+      wallpaperDim: DEFAULT_WALLPAPER_DIM,
+      textShadow: false,
     });
     const colors = { ...DEFAULT_COLORS };
     for (const key of Object.keys(DEFAULT_COLORS)) {
       if (isHexColor(stored.colors?.[key])) colors[key] = stored.colors[key];
     }
+    const dim = Number(stored.wallpaperDim);
     return {
       enabled: stored.enabled,
       targetLang: stored.targetLang || defaultLang(),
       customColors: stored.customColors === true,
       colors,
+      backgroundMode: stored.backgroundMode === 'image' ? 'image' : 'color',
+      wallpaperDim: Number.isFinite(dim)
+        ? Math.min(MAX_WALLPAPER_DIM, Math.max(0, Math.round(dim)))
+        : DEFAULT_WALLPAPER_DIM,
+      textShadow: stored.textShadow === true,
     };
   }
 
@@ -47,5 +69,17 @@ globalThis.LyriLang ??= (() => {
     }
   }
 
-  return { api, LANGUAGES, DEFAULT_COLORS, isHexColor, getSettings, localizePage };
+  return {
+    api,
+    LANGUAGES,
+    DEFAULT_COLORS,
+    WALLPAPER_KEY,
+    DEFAULT_WALLPAPER_DIM,
+    MAX_WALLPAPER_DIM,
+    isHexColor,
+    isImageDataUrl,
+    getSettings,
+    getWallpaper,
+    localizePage,
+  };
 })();

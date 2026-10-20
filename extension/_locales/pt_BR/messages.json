@@ -43,22 +43,55 @@
     "message": "Não foi possível limpar"
   },
   "customColors": {
-    "message": "Usar minhas cores"
+    "message": "Usar meu visual"
   },
   "customizeColors": {
-    "message": "Personalizar cores"
+    "message": "Personalizar visual"
   },
   "optionsPageTitle": {
-    "message": "LyriLang – Cores da letra"
+    "message": "LyriLang – Visual da letra"
   },
   "optionsTitle": {
-    "message": "Cores da letra"
+    "message": "Visual da letra"
   },
   "optionsIntro": {
-    "message": "Troca as cores que o Spotify gera a partir da capa do álbum. Vale para a tela de letra e para o painel lateral, e as mudanças aparecem na hora."
+    "message": "Troca as cores que o Spotify gera a partir da capa do álbum pelas suas cores ou por uma imagem. Vale para a tela de letra (o painel lateral usa a cor de fundo), e as mudanças aparecem na hora."
+  },
+  "backgroundLabel": {
+    "message": "Fundo"
+  },
+  "bgModeColor": {
+    "message": "Cor"
+  },
+  "bgModeImage": {
+    "message": "Imagem"
+  },
+  "noImage": {
+    "message": "Nenhuma imagem escolhida"
+  },
+  "chooseImage": {
+    "message": "Escolher imagem…"
+  },
+  "removeImage": {
+    "message": "Remover"
+  },
+  "imageError": {
+    "message": "Não foi possível usar essa imagem. Tente um arquivo JPG, PNG ou WebP."
+  },
+  "imageTooLarge": {
+    "message": "Essa imagem é grande demais (máx. 25 MB)."
+  },
+  "dimImage": {
+    "message": "Escurecer imagem"
+  },
+  "imageLocalNote": {
+    "message": "A imagem fica só neste navegador: não é enviada para nenhum lugar nem sincronizada com outros dispositivos."
+  },
+  "textShadow": {
+    "message": "Sombra no texto (melhora a leitura)"
   },
   "colorBackground": {
-    "message": "Fundo"
+    "message": "Cor de fundo"
   },
   "colorActive": {
     "message": "Linha atual e já cantadas"

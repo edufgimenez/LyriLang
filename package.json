@@ -1,6 +1,6 @@
 {
   "name": "lyrilang",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Extensão que mostra a tradução das letras do Spotify Web abaixo da linha original.",
   "scripts": {
