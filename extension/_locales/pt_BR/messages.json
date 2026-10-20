@@ -42,6 +42,48 @@
   "cacheClearFailed": {
     "message": "Não foi possível limpar"
   },
+  "customColors": {
+    "message": "Usar minhas cores"
+  },
+  "customizeColors": {
+    "message": "Personalizar cores"
+  },
+  "optionsPageTitle": {
+    "message": "LyriLang – Cores da letra"
+  },
+  "optionsTitle": {
+    "message": "Cores da letra"
+  },
+  "optionsIntro": {
+    "message": "Troca as cores que o Spotify gera a partir da capa do álbum. Vale para a tela de letra e para o painel lateral, e as mudanças aparecem na hora."
+  },
+  "colorBackground": {
+    "message": "Fundo"
+  },
+  "colorActive": {
+    "message": "Linha atual e já cantadas"
+  },
+  "colorInactive": {
+    "message": "Próximas linhas"
+  },
+  "previewLabel": {
+    "message": "Prévia"
+  },
+  "previewPassed": {
+    "message": "Uma linha que já foi cantada"
+  },
+  "previewActive": {
+    "message": "A linha que está tocando"
+  },
+  "previewTranslation": {
+    "message": "A tradução dela aparece aqui"
+  },
+  "previewInactive": {
+    "message": "A próxima linha"
+  },
+  "restoreDefaults": {
+    "message": "Restaurar cores padrão"
+  },
   "aboutProject": {
     "message": "Sobre o projeto"
   },

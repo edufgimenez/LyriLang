@@ -121,6 +121,25 @@ input[type="checkbox"][role="switch"]:checked::after {
   font-size: 12px;
 }
 
+.colors-row {
+  margin: 14px 0 2px;
+}
+
+button.link {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+button.link:hover,
+button.link:focus-visible {
+  color: var(--text);
+}
+
 footer {
   margin-top: 14px;
   padding-top: 12px;

@@ -42,6 +42,48 @@
   "cacheClearFailed": {
     "message": "Could not clear"
   },
+  "customColors": {
+    "message": "Use my colors"
+  },
+  "customizeColors": {
+    "message": "Customize colors"
+  },
+  "optionsPageTitle": {
+    "message": "LyriLang – Lyrics colors"
+  },
+  "optionsTitle": {
+    "message": "Lyrics colors"
+  },
+  "optionsIntro": {
+    "message": "Replaces the colors Spotify generates from the album cover. Applies to the lyrics view and the side panel, and changes show up right away."
+  },
+  "colorBackground": {
+    "message": "Background"
+  },
+  "colorActive": {
+    "message": "Current and sung lines"
+  },
+  "colorInactive": {
+    "message": "Upcoming lines"
+  },
+  "previewLabel": {
+    "message": "Preview"
+  },
+  "previewPassed": {
+    "message": "A line that was already sung"
+  },
+  "previewActive": {
+    "message": "The line playing now"
+  },
+  "previewTranslation": {
+    "message": "Its translation appears here"
+  },
+  "previewInactive": {
+    "message": "The next line"
+  },
+  "restoreDefaults": {
+    "message": "Restore default colors"
+  },
   "aboutProject": {
     "message": "About the project"
   },

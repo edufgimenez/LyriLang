@@ -7,7 +7,9 @@
   const MAX_RETRY_DELAY = 60_000;
   const MAX_CACHED_LINES = 3000;
 
-  let settings = { enabled: false, targetLang: 'en' };
+  const COLORS_STYLE_ID = 'lyrilang-colors';
+
+  let settings = { enabled: false, targetLang: 'en', customColors: false, colors: null };
   const translations = new Map(); // linha original -> tradução ('' = sem tradução)
   const pending = new Set();
   let generation = 0; // muda quando o idioma ou o liga/desliga mudam
@@ -116,14 +118,43 @@
     if (settings.enabled) scheduleRequest(0);
   }
 
+  // O Spotify define as cores da letra em variáveis CSS inline no container
+  // (--lyrics-color-*). Sobrescrevemos as variáveis, sem depender das classes,
+  // que mudam a cada versão do Spotify.
+  function applyColors() {
+    let style = document.getElementById(COLORS_STYLE_ID);
+    if (!settings.customColors) {
+      style?.remove();
+      return;
+    }
+    if (!style) {
+      style = document.createElement('style');
+      style.id = COLORS_STYLE_ID;
+      (document.head ?? document.documentElement).append(style);
+    }
+    const { background, active, inactive } = settings.colors;
+    style.textContent = `[style*="--lyrics-color-background"] {
+  --lyrics-color-background: ${background} !important;
+  --lyrics-color-active: ${active} !important;
+  --lyrics-color-passed: ${active} !important;
+  --lyrics-color-inactive: ${inactive} !important;
+  --lyrics-color-messaging: ${inactive} !important;
+}`;
+  }
+
   api.storage.onChanged.addListener(async (changes, area) => {
-    if (area !== 'sync' || !('enabled' in changes || 'targetLang' in changes)) return;
+    if (area !== 'sync') return;
+    const translationChanged = 'enabled' in changes || 'targetLang' in changes;
+    const colorsChanged = 'customColors' in changes || 'colors' in changes;
+    if (!translationChanged && !colorsChanged) return;
     settings = await getSettings();
-    reset();
+    if (colorsChanged) applyColors();
+    if (translationChanged) reset();
   });
 
   getSettings().then((s) => {
     settings = s;
+    applyColors();
     observer.observe(document.body, { childList: true, subtree: true });
     if (settings.enabled) scheduleRequest(0);
   });

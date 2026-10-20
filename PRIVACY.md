@@ -27,7 +27,7 @@ The extension does not use analytics, telemetry, or its own server. The LyriLang
 
 ## Data stored in your browser
 
-- **Preferences** (translation on or off, target language): stored in the browser's `storage.sync`. If Firefox or Chrome sync is enabled, the browser itself syncs this data across your devices.
+- **Preferences** (translation on or off, target language, custom lyrics colors): stored in the browser's `storage.sync`. If Firefox or Chrome sync is enabled, the browser itself syncs this data across your devices.
 - **Cached translations**: lyric translations are stored in the browser's `storage.local` so the same song is not translated again. Each translation expires after **30 days**, and the cache keeps at most 200 songs. To delete everything right away, use the **Clear saved translations** button in the popup. The original lyrics are not stored, only an identifier (hash) used to find the translation.
 
 Removing the extension deletes all of this data.

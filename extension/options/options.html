@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="optionsPageTitle">LyriLang</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="../src/content.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img src="../icons/icon-48.png" alt="" width="36" height="36">
+      <div>
+        <h1>LyriLang</h1>
+        <p class="subtitle" data-i18n="optionsTitle"></p>
+      </div>
+    </header>
+
+    <p class="intro" data-i18n="optionsIntro"></p>
+
+    <label class="row">
+      <span data-i18n="customColors"></span>
+      <input id="customColors" type="checkbox" role="switch">
+    </label>
+
+    <fieldset id="colorFields">
+      <label class="color-row">
+        <span data-i18n="colorBackground"></span>
+        <code data-hex="background"></code>
+        <input type="color" data-color="background">
+      </label>
+      <label class="color-row">
+        <span data-i18n="colorActive"></span>
+        <code data-hex="active"></code>
+        <input type="color" data-color="active">
+      </label>
+      <label class="color-row">
+        <span data-i18n="colorInactive"></span>
+        <code data-hex="inactive"></code>
+        <input type="color" data-color="inactive">
+      </label>
+    </fieldset>
+
+    <p class="preview-label" data-i18n="previewLabel"></p>
+    <div id="preview" class="preview" aria-hidden="true">
+      <div class="line passed" data-i18n="previewPassed"></div>
+      <div class="line active">
+        <div data-i18n="previewActive"></div>
+        <div class="lyrilang-tr" data-i18n="previewTranslation"></div>
+      </div>
+      <div class="line inactive" data-i18n="previewInactive"></div>
+    </div>
+
+    <button id="restore" type="button" class="secondary" data-i18n="restoreDefaults"></button>
+  </main>
+
+  <script src="../src/shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

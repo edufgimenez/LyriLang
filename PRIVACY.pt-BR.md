@@ -27,7 +27,7 @@ A extensão não usa analytics, telemetria nem servidor próprio. O desenvolvedo
 
 ## Dados guardados no seu navegador
 
-- **Preferências** (tradução ligada ou desligada, idioma de destino): ficam no `storage.sync` do navegador. Se a sincronização do Firefox ou do Chrome estiver ativa, o próprio navegador sincroniza esses dados entre os seus dispositivos.
+- **Preferências** (tradução ligada ou desligada, idioma de destino, cores personalizadas da letra): ficam no `storage.sync` do navegador. Se a sincronização do Firefox ou do Chrome estiver ativa, o próprio navegador sincroniza esses dados entre os seus dispositivos.
 - **Traduções em cache**: as traduções das letras ficam no `storage.local` do navegador, para não traduzir a mesma música de novo. Cada tradução expira em **30 dias**, e o cache guarda no máximo 200 músicas. Para apagar tudo na hora, use o botão **Limpar traduções salvas** no popup. As letras originais não são guardadas, só um identificador (hash) usado para localizar a tradução.
 
 Remover a extensão apaga todos esses dados.
