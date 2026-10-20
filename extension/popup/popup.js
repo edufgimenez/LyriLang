@@ -8,9 +8,17 @@ const clearCacheButton = document.getElementById('clearCache');
 const cacheStatus = document.getElementById('cacheStatus');
 
 const origins = api.runtime.getManifest().host_permissions;
+const uiLang = api.i18n.getUILanguage?.() || 'en';
+const t = (key, ...subs) => api.i18n.getMessage(key, subs);
+
+function localize() {
+  document.documentElement.lang = uiLang;
+  for (const el of document.querySelectorAll('[data-i18n]')) {
+    el.textContent = t(el.dataset.i18n);
+  }
+}
 
 function fillLanguages() {
-  const uiLang = api.i18n.getUILanguage?.() || 'pt-BR';
   const names = new Intl.DisplayNames([uiLang], { type: 'language' });
   const options = LANGUAGES.map((code) => {
     const name = names.of(code) ?? code;
@@ -38,22 +46,38 @@ grantButton.addEventListener('click', () => {
   api.permissions.request({ origins }).then(refreshPermission);
 });
 
+// O resultado aparece no próprio botão por alguns segundos, sem mudar o layout.
+const CLEAR_FEEDBACK_MS = 2500;
+
 clearCacheButton.addEventListener('click', async () => {
   clearCacheButton.disabled = true;
+  let message;
+  let ok = false;
   try {
     const res = await api.runtime.sendMessage({ type: 'clearCache' });
     if (!res || res.error) throw new Error(res?.error);
-    cacheStatus.textContent =
-      res.removed === 0 ? 'Nada para limpar'
-        : res.removed === 1 ? '1 música removida'
-          : `${res.removed} músicas removidas`;
+    message =
+      res.removed === 0 ? t('cacheClearedNone')
+        : res.removed === 1 ? t('cacheClearedOne')
+          : t('cacheClearedMany', String(res.removed));
+    ok = true;
   } catch {
-    cacheStatus.textContent = 'Não foi possível limpar';
-  } finally {
-    clearCacheButton.disabled = false;
+    message = t('cacheClearFailed');
   }
+  clearCacheButton.textContent = ok ? `✓ ${message}` : message;
+  clearCacheButton.classList.toggle('done', ok);
+  cacheStatus.textContent = message;
+  setTimeout(() => {
+    clearCacheButton.textContent = t('clearCache');
+    clearCacheButton.classList.remove('done');
+    clearCacheButton.disabled = false;
+  }, CLEAR_FEEDBACK_MS);
 });
 
+const manifest = api.runtime.getManifest();
+localize();
+document.getElementById('about').href = manifest.homepage_url;
+document.getElementById('version').textContent = `v${manifest.version}`;
 fillLanguages();
 getSettings().then(({ enabled, targetLang }) => {
   enabledInput.checked = enabled;

@@ -1,43 +1,45 @@
-# Política de privacidade do LyriLang
+**English** | [Português (Brasil)](PRIVACY.pt-BR.md)
 
-Última atualização: 20 de outubro de 2026
+# LyriLang Privacy Policy
 
-O LyriLang é uma extensão de navegador que mostra a tradução das letras exibidas no Spotify Web (`open.spotify.com`). Esta política descreve quais dados a extensão usa, para onde eles vão e como você pode controlá-los.
+Last updated: October 20, 2026
 
-## Dados enviados para fora do seu navegador
+LyriLang is a browser extension that shows translations of the lyrics displayed on Spotify Web (`open.spotify.com`). This policy describes which data the extension uses, where it goes, and how you can control it.
 
-Quando a tradução está ligada e você abre a tela de letra de uma música no Spotify Web, a extensão envia ao **Google Tradutor** (`translate.googleapis.com`):
+## Data sent outside your browser
 
-- o texto das linhas da letra que estão na tela, sem as linhas repetidas;
-- o código do idioma de destino escolhido (por exemplo, `pt` ou `en`).
+When the translation is turned on and you open the lyrics view of a song on Spotify Web, the extension sends to **Google Translate** (`translate.googleapis.com`):
 
-Esse envio serve só para traduzir as linhas, e acontece automaticamente ao abrir uma letra. Para impedir o envio, desligue a opção **Mostrar tradução** no popup da extensão.
+- the text of the lyric lines shown on the screen, without repeated lines;
+- the code of the chosen target language (for example, `pt` or `en`).
 
-Como em qualquer requisição na internet, o Google recebe o endereço IP do seu dispositivo. A requisição é feita **sem cookies**. O tratamento desses dados pelo Google segue a [Política de Privacidade do Google](https://policies.google.com/privacy).
+This is sent only to translate the lines, and it happens automatically when you open the lyrics. To stop it, turn off **Show translation** in the extension popup.
 
-## Dados que a extensão não envia
+As with any request on the internet, Google receives your device's IP address. The request is made **without cookies**. Google's handling of this data is governed by the [Google Privacy Policy](https://policies.google.com/privacy).
 
-- título da música, artista ou álbum;
-- dados da sua conta do Spotify, cookies ou tokens;
-- histórico de navegação ou outras páginas que você visita.
+## Data the extension does not send
 
-A extensão não usa analytics, telemetria nem servidor próprio. O desenvolvedor do LyriLang não recebe nenhum dado seu.
+- song title, artist, or album;
+- your Spotify account data, cookies, or tokens;
+- your browsing history or other pages you visit.
 
-## Dados guardados no seu navegador
+The extension does not use analytics, telemetry, or its own server. The LyriLang developer does not receive any of your data.
 
-- **Preferências** (tradução ligada ou desligada, idioma de destino): ficam no `storage.sync` do navegador. Se a sincronização do Firefox ou do Chrome estiver ativa, o próprio navegador sincroniza esses dados entre os seus dispositivos.
-- **Traduções em cache**: as traduções das letras ficam no `storage.local` do navegador, para não traduzir a mesma música de novo. Cada tradução expira em **30 dias**, e o cache guarda no máximo 200 músicas. Para apagar tudo na hora, use o botão **Limpar traduções salvas** no popup. As letras originais não são guardadas, só um identificador (hash) usado para localizar a tradução.
+## Data stored in your browser
 
-Remover a extensão apaga todos esses dados.
+- **Preferences** (translation on or off, target language): stored in the browser's `storage.sync`. If Firefox or Chrome sync is enabled, the browser itself syncs this data across your devices.
+- **Cached translations**: lyric translations are stored in the browser's `storage.local` so the same song is not translated again. Each translation expires after **30 days**, and the cache keeps at most 200 songs. To delete everything right away, use the **Clear saved translations** button in the popup. The original lyrics are not stored, only an identifier (hash) used to find the translation.
 
-## Mudanças nesta política
+Removing the extension deletes all of this data.
 
-Qualquer alteração é publicada neste arquivo, com a data de atualização acima. O histórico completo fica no repositório do projeto.
+## Changes to this policy
 
-## Contato
+Any change is published in this file, with the update date above. The full history is available in the project repository.
 
-Dúvidas ou solicitações: abra uma issue em <https://github.com/edufgimenez/LyriLang/issues>.
+## Contact
+
+Questions or requests: open an issue at <https://github.com/edufgimenez/LyriLang/issues>.
 
 ---
 
-O LyriLang é um projeto independente e não é afiliado, patrocinado nem endossado pelo Spotify.
+LyriLang is an independent project and is not affiliated with, sponsored by, or endorsed by Spotify.
