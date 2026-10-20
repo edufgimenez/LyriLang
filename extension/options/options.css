@@ -204,8 +204,58 @@ fieldset:disabled .segmented span {
   color: #f5c26b;
 }
 
-.range-row output#positionValue {
-  font-family: inherit;
+.focus-row {
+  padding: 8px 0;
+}
+
+.focus-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+/* A imagem inteira, com a parte que aparece na área da letra destacada. */
+.focus-picker {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.focus-picker img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.focus-window {
+  position: absolute;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.focus-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+fieldset:disabled .focus-picker {
+  cursor: default;
 }
 
 .check-row {
@@ -257,13 +307,18 @@ button.secondary.small {
   font-size: 12px;
 }
 
+/* O formato acompanha a área da letra no Spotify (aspect-ratio definido pelo options.js). */
 .preview {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px 24px;
   border-radius: 12px;
   background-color: var(--c-background);
   background-position: center;
   background-size: cover;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   line-height: 1.25;
   transition: opacity 0.15s;
