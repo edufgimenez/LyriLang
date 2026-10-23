@@ -228,6 +228,13 @@ for (const [key, input] of Object.entries(colorInputs)) {
   input.addEventListener('change', () => saveNow('colors', colors));
 }
 
+// No Firefox, o <input type="color"> abre a janela de cor do sistema, que só aplica no OK;
+// lá usamos o seletor próprio (color-picker.js). Detecta pelo endereço da página: no painel
+// (iframe no Spotify) o Firefox não expõe runtime.getBrowserInfo.
+if (location.protocol === 'moz-extension:') {
+  globalThis.LyriLangColorPicker.attach(Object.values(colorInputs), t);
+}
+
 for (const input of modeInputs) {
   input.addEventListener('change', () => {
     if (!input.checked) return;

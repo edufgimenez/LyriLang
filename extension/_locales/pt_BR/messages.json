@@ -141,6 +141,15 @@
   "previewInactive": {
     "message": "A próxima linha"
   },
+  "colorPicker": {
+    "message": "Seletor de cor"
+  },
+  "colorSaturation": {
+    "message": "Saturação e brilho"
+  },
+  "colorHue": {
+    "message": "Matiz"
+  },
   "closePanel": {
     "message": "Fechar"
   },
