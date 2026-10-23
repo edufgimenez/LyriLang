@@ -21,6 +21,10 @@
   let removeTimer = null;
   let placeTimer = null;
 
+  // Ao recarregar ou atualizar a extensão, o Firefox injeta este script de novo nas abas abertas,
+  // mas um painel que estava aberto fica na página sem funcionar (os scripts dele morrem).
+  document.querySelectorAll(`.${PANEL_CLASS}`).forEach((el) => el.remove());
+
   // Mesma altura da área da letra; sem a letra aberta, entre o cabeçalho e a barra do player.
   function panelBounds() {
     const holder = document.querySelector(MAIN_HOLDER_SELECTOR);
