@@ -404,3 +404,153 @@ button.secondary {
 button.secondary:hover {
   border-color: var(--muted);
 }
+
+button.close {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: 24px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  cursor: pointer;
+}
+
+button.close:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Painel lateral no Spotify: sem a introdução e a prévia, porque a letra ao lado mostra as mudanças. */
+.in-panel {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.in-panel main {
+  margin: 0;
+  padding: 16px 20px 20px;
+}
+
+.in-panel .intro,
+.in-panel .preview-label,
+.in-panel #noAreaNote,
+.in-panel #preview {
+  display: none;
+}
+
+/* Seletor de cor próprio (color-picker.js), usado no Firefox. */
+.picker {
+  position: absolute;
+  z-index: 10;
+  width: 240px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.picker-sv {
+  position: relative;
+  height: 140px;
+  border-radius: 6px;
+  background:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, hsl(var(--hue, 0) 100% 50%));
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.picker-sv-thumb {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.picker-preview {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+
+.picker-hue {
+  flex: 1;
+  height: 12px;
+  margin: 0;
+  border-radius: 6px;
+  background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  appearance: none;
+  cursor: pointer;
+}
+
+.picker-hue::-moz-range-track {
+  background: transparent;
+}
+
+.picker-hue::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.picker-hue::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+  appearance: none;
+}
+
+.picker-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.picker-fields label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.picker-fields input {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font: 12px ui-monospace, "Cascadia Mono", Consolas, monospace;
+  text-align: center;
+  appearance: textfield;
+}
+
+.picker-fields input::-webkit-inner-spin-button {
+  appearance: none;
+}

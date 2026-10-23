@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "homepage_url": "https://github.com/edufgimenez/LyriLang",
@@ -17,9 +17,15 @@
   "content_scripts": [
     {
       "matches": ["https://open.spotify.com/*"],
-      "js": ["src/shared.js", "src/content.js"],
+      "js": ["src/shared.js", "src/content.js", "src/panel.js"],
       "css": ["src/content.css"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["options/options.html"],
+      "matches": ["https://open.spotify.com/*"]
     }
   ],
   "options_ui": {

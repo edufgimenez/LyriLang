@@ -6,3 +6,34 @@
   margin-top: 0.15em;
   opacity: 0.8;
 }
+
+/* Painel lateral com as opções (src/panel.js). Entra pela direita, entre o cabeçalho e o player. */
+.lyrilang-panel {
+  position: fixed !important;
+  display: block !important;
+  right: 8px;
+  z-index: 2147483000;
+  width: min(460px, calc(100vw - 16px));
+  border: 0;
+  border-radius: 8px;
+  background: #121212;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  transform: translateX(calc(100% + 16px));
+  visibility: hidden;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.3s,
+    top 0.25s ease, height 0.25s ease;
+}
+
+.lyrilang-panel.lyrilang-panel-open {
+  transform: none;
+  visibility: visible;
+  /* top e height acompanham as barras do Spotify aparecendo e sumindo. */
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.25s ease, height 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lyrilang-panel,
+  .lyrilang-panel.lyrilang-panel-open {
+    transition: none;
+  }
+}

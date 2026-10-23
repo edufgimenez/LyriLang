@@ -228,6 +228,13 @@ for (const [key, input] of Object.entries(colorInputs)) {
   input.addEventListener('change', () => saveNow('colors', colors));
 }
 
+// No Firefox, o <input type="color"> abre a janela de cor do sistema, que só aplica no OK;
+// lá usamos o seletor próprio (color-picker.js). Detecta pelo endereço da página: no painel
+// (iframe no Spotify) o Firefox não expõe runtime.getBrowserInfo.
+if (location.protocol === 'moz-extension:') {
+  globalThis.LyriLangColorPicker.attach(Object.values(colorInputs), t);
+}
+
 for (const input of modeInputs) {
   input.addEventListener('change', () => {
     if (!input.checked) return;
@@ -359,6 +366,21 @@ api.storage.onChanged.addListener(async (changes, area) => {
   toggle.checked = changes.customColors.newValue === true;
   render();
 });
+
+// No painel lateral do Spotify (src/panel.js), a letra ao lado já serve de prévia.
+// Fechar avisa a página do Spotify, que tira o painel.
+if (new URLSearchParams(location.search).has('panel')) {
+  document.documentElement.classList.add('in-panel');
+  const closeButton = $('closePanel');
+  const close = () => window.parent.postMessage({ type: 'lyrilang:closePanel' }, 'https://open.spotify.com');
+  closeButton.hidden = false;
+  closeButton.title = t('closePanel');
+  closeButton.setAttribute('aria-label', t('closePanel'));
+  closeButton.addEventListener('click', close);
+  addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') close();
+  });
+}
 
 localizePage();
 Promise.all([getSettings(), getWallpaper(), getLyricsArea()]).then(([settings, storedWallpaper, storedArea]) => {

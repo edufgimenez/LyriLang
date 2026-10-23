@@ -141,6 +141,18 @@
   "previewInactive": {
     "message": "The next line"
   },
+  "colorPicker": {
+    "message": "Color picker"
+  },
+  "colorSaturation": {
+    "message": "Saturation and brightness"
+  },
+  "colorHue": {
+    "message": "Hue"
+  },
+  "closePanel": {
+    "message": "Close"
+  },
   "restoreDefaults": {
     "message": "Restore default colors"
   },
