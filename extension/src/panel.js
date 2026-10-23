@@ -35,9 +35,13 @@
   }
 
   // A altura vai explícita: um iframe com top e bottom não estica (fica com 150px).
+  // Em janelas baixas a área da letra passa da tela (o Spotify tem altura mínima); o painel
+  // fica dentro da parte visível para o fim dele continuar alcançável.
   function placePanel() {
     if (!panel) return;
-    const { top, bottom } = panelBounds();
+    const area = panelBounds();
+    const top = Math.max(area.top, 0);
+    const bottom = Math.min(area.bottom, innerHeight - GAP);
     const height = `${Math.max(0, Math.round(bottom - top))}px`;
     if (panel.style.height !== height) panel.style.height = height;
     panel.style.top = `${Math.round(top)}px`;
