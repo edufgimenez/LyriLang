@@ -6,6 +6,11 @@ Browser extension that shows, below each lyric line on [Spotify Web](https://ope
 
 Works on Firefox (142+) and Chrome (121+) with the same files. The extension interface is available in English and Portuguese (Brazil), following the browser language.
 
+## Install
+
+- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/lyrilang/)
+- **Chrome:** [Chrome Web Store](https://chromewebstore.google.com/detail/lyrilang/lejoanaaoijbaedbknemgiiaaalgaemi)
+
 > LyriLang is an independent project and is not affiliated with, sponsored by, or endorsed by Spotify.
 
 ## How it works
@@ -41,9 +46,9 @@ npm run build    # creates the .zip in web-ext-artifacts/ (only with the content
 2. Click **Load Temporary Add-on…** and choose `extension/manifest.json`.
 3. Open the lyrics of a song on Spotify Web and choose the language in the extension popup.
 
-### Chrome (via GitHub)
+### Load it in Chrome (unpacked)
 
-The extension is not on the Chrome Web Store. To use it on Chrome:
+To test a version that is not on the Chrome Web Store yet:
 
 1. Download the `.zip` of the latest version from [Releases](https://github.com/edufgimenez/LyriLang/releases) and unzip it, or clone this repository.
 2. Open `chrome://extensions` and enable **Developer mode**.

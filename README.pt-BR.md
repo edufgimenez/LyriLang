@@ -6,6 +6,11 @@ Extensão de navegador que mostra, abaixo de cada linha da letra no [Spotify Web
 
 Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos. A interface da extensão está disponível em inglês e português (Brasil), de acordo com o idioma do navegador.
 
+## Instalar
+
+- **Firefox:** [Complementos do Firefox](https://addons.mozilla.org/pt-BR/firefox/addon/lyrilang/)
+- **Chrome:** [Chrome Web Store](https://chromewebstore.google.com/detail/lyrilang/lejoanaaoijbaedbknemgiiaaalgaemi?hl=pt-BR)
+
 > O LyriLang é um projeto independente e não é afiliado, patrocinado nem endossado pelo Spotify.
 
 ## Como funciona
@@ -41,9 +46,9 @@ npm run build    # gera o .zip em web-ext-artifacts/ (só com o conteúdo de ext
 2. Clique em **Carregar extensão temporária…** e escolha `extension/manifest.json`.
 3. Abra a letra de uma música no Spotify Web e escolha o idioma no popup da extensão.
 
-### Chrome (via GitHub)
+### Carregar no Chrome (sem compactação)
 
-A extensão não está na Chrome Web Store. Para usar no Chrome:
+Para testar uma versão que ainda não está na Chrome Web Store:
 
 1. Baixe o `.zip` da versão mais recente em [Releases](https://github.com/edufgimenez/LyriLang/releases) e descompacte, ou clone este repositório.
 2. Abra `chrome://extensions` e ative o **Modo do desenvolvedor**.
