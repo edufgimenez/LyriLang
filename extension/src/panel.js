@@ -1,7 +1,7 @@
 // Painel lateral com a página de opções, aberto pelo popup na aba do Spotify.
 // As mudanças aparecem na letra ao lado na hora, sem trocar de aba.
 (() => {
-  const { api } = globalThis.LyriLang;
+  const { api, findScrollParent, MAIN_HOLDER_SELECTOR } = globalThis.LyriLang;
 
   const PANEL_CLASS = 'lyrilang-panel';
   const OPEN_CLASS = 'lyrilang-panel-open';
@@ -13,20 +13,34 @@
   // Sem as barras do Spotify na página, usa a altura aproximada delas.
   const FALLBACK_TOP = 64;
   const FALLBACK_BOTTOM = 96;
+  // Com a letra tocando e o mouse parado, o Spotify esconde as barras de cima e de baixo e a
+  // área da letra cresce; o painel confere a posição de tempos em tempos enquanto está aberto.
+  const PLACE_INTERVAL = 250;
 
   let panel = null;
   let removeTimer = null;
+  let placeTimer = null;
 
-  // Ocupa a mesma altura da área da letra: entre o cabeçalho e a barra do player.
+  // Mesma altura da área da letra; sem a letra aberta, entre o cabeçalho e a barra do player.
+  function panelBounds() {
+    const holder = document.querySelector(MAIN_HOLDER_SELECTOR);
+    const area = holder && findScrollParent(holder)?.getBoundingClientRect();
+    if (area?.height) return { top: area.top, bottom: area.bottom };
+    const nav = document.querySelector('[data-testid="global-nav-bar"]');
+    const player = document.querySelector('[data-testid="now-playing-bar"]');
+    return {
+      top: nav ? nav.getBoundingClientRect().bottom : FALLBACK_TOP,
+      bottom: player ? player.getBoundingClientRect().top - GAP : innerHeight - FALLBACK_BOTTOM,
+    };
+  }
+
   // A altura vai explícita: um iframe com top e bottom não estica (fica com 150px).
   function placePanel() {
     if (!panel) return;
-    const nav = document.querySelector('[data-testid="global-nav-bar"]');
-    const player = document.querySelector('[data-testid="now-playing-bar"]');
-    const top = nav ? nav.getBoundingClientRect().bottom : FALLBACK_TOP;
-    const bottom = player ? innerHeight - player.getBoundingClientRect().top + GAP : FALLBACK_BOTTOM;
+    const { top, bottom } = panelBounds();
+    const height = `${Math.max(0, Math.round(bottom - top))}px`;
+    if (panel.style.height !== height) panel.style.height = height;
     panel.style.top = `${Math.round(top)}px`;
-    panel.style.height = `${Math.max(0, Math.round(innerHeight - top - bottom))}px`;
   }
 
   function openPanel() {
@@ -44,6 +58,8 @@
     }
     placePanel();
     panel.focus();
+    clearInterval(placeTimer);
+    placeTimer = setInterval(placePanel, PLACE_INTERVAL);
     addEventListener('resize', placePanel);
     addEventListener('keydown', onKeyDown, true);
   }
@@ -53,6 +69,7 @@
     if (!panel) return;
     const closing = panel;
     closing.classList.remove(OPEN_CLASS);
+    clearInterval(placeTimer);
     removeEventListener('resize', placePanel);
     removeEventListener('keydown', onKeyDown, true);
     removeTimer = setTimeout(() => {

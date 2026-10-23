@@ -26,6 +26,9 @@ globalThis.LyriLang ??= (() => {
   // Tamanho da área da letra no Spotify, medido pelo content script. A página de opções
   // usa para mostrar a prévia e o recorte no formato real.
   const LYRICS_AREA_KEY = 'lyricsArea';
+  // Container da letra na tela principal do Spotify (o painel lateral também define as variáveis).
+  const MAIN_HOLDER_SELECTOR =
+    '[style*="--lyrics-color-background"]:not([data-testid="lyrics-npv-section"])';
 
   const isImageDataUrl = (value) =>
     typeof value === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
@@ -70,6 +73,14 @@ globalThis.LyriLang ??= (() => {
       layers.push(`url("${wallpaper.dataUrl}") ${wallpaperPositionX}% ${wallpaperPosition}% / cover no-repeat`);
     }
     return layers.join(', ');
+  }
+
+  // Elemento que rola a letra (recebe o wallpaper e serve de referência para o painel de opções).
+  function findScrollParent(el) {
+    for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+      if (/(auto|scroll)/.test(getComputedStyle(node).overflowY)) return node;
+    }
+    return null;
   }
 
   function defaultLang() {
@@ -129,9 +140,11 @@ globalThis.LyriLang ??= (() => {
     WALLPAPER_FITS,
     DEFAULT_WALLPAPER_POSITION,
     LYRICS_AREA_KEY,
+    MAIN_HOLDER_SELECTOR,
     isHexColor,
     isImageDataUrl,
     buildWallpaperLayers,
+    findScrollParent,
     getSettings,
     getWallpaper,
     getLyricsArea,

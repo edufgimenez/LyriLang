@@ -20,13 +20,15 @@
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
   transform: translateX(calc(100% + 16px));
   visibility: hidden;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.3s;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.3s,
+    top 0.25s ease, height 0.25s ease;
 }
 
 .lyrilang-panel.lyrilang-panel-open {
   transform: none;
   visibility: visible;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* top e height acompanham as barras do Spotify aparecendo e sumindo. */
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.25s ease, height 0.25s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

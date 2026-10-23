@@ -1,5 +1,14 @@
 (() => {
-  const { api, getSettings, getWallpaper, buildWallpaperLayers, WALLPAPER_KEY, LYRICS_AREA_KEY } = globalThis.LyriLang;
+  const {
+    api,
+    getSettings,
+    getWallpaper,
+    buildWallpaperLayers,
+    findScrollParent,
+    WALLPAPER_KEY,
+    LYRICS_AREA_KEY,
+    MAIN_HOLDER_SELECTOR,
+  } = globalThis.LyriLang;
 
   const LINE_SELECTOR = '[data-testid="lyrics-line"]';
   const TR_CLASS = 'lyrilang-tr';
@@ -11,9 +20,6 @@
   const COLORS_STYLE_ID = 'lyrilang-colors';
   const WALLPAPER_ATTR = 'data-lyrilang-wallpaper';
   const CLEAR_ATTR = 'data-lyrilang-clear';
-  // Container da letra na tela principal (o painel lateral também define as variáveis).
-  const MAIN_HOLDER_SELECTOR =
-    '[style*="--lyrics-color-background"]:not([data-testid="lyrics-npv-section"])';
   const APPEARANCE_KEYS = [
     'customColors', 'colors', 'backgroundMode', 'wallpaperDim', 'wallpaperFit', 'wallpaperPositionX', 'wallpaperPosition',
     'textShadow',
@@ -250,13 +256,6 @@
     if (el.hasAttribute(CLEAR_ATTR)) return true;
     const style = getComputedStyle(el);
     return style.backgroundImage !== 'none' || !/^(transparent|rgba\(.*,\s*0\))$/.test(style.backgroundColor);
-  }
-
-  function findScrollParent(el) {
-    for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
-      if (/(auto|scroll)/.test(getComputedStyle(node).overflowY)) return node;
-    }
-    return null;
   }
 
   api.storage.onChanged.addListener(async (changes, area) => {
