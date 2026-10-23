@@ -19,6 +19,7 @@ Works on Firefox (142+) and Chrome (121+) with the same files. The extension int
 - `extension/src/background.js` translates the whole lyrics at once using the free (unofficial) Google Translate endpoint and caches the result in `storage.local`.
 - `extension/popup/` lets you turn the translation on or off, choose the target language and turn on your own lyrics colors.
 - `extension/options/` lets you choose the lyrics look (background color or your own image as a wallpaper, current line and other lines colors, text shadow), replacing the colors Spotify generates from the album cover. It overrides the `--lyrics-color-*` CSS variables Spotify sets, so it does not depend on Spotify class names.
+- `extension/src/panel.js` opens the options in a side panel next to the lyrics when you click **Customize look** in the popup on the Spotify tab, so changes show up live without switching tabs. Elsewhere the options open in a tab.
 
 > The lyric text is sent to Google Translate to be translated. See the [privacy policy](PRIVACY.md).
 

@@ -141,6 +141,9 @@
   "previewInactive": {
     "message": "A próxima linha"
   },
+  "closePanel": {
+    "message": "Fechar"
+  },
   "restoreDefaults": {
     "message": "Restaurar cores padrão"
   },

@@ -41,7 +41,18 @@ customColorsInput.addEventListener('change', () => {
 });
 
 // O seletor de cor nativo fecha o popup no Firefox, então as cores ficam na página de opções.
-openOptionsButton.addEventListener('click', () => {
+// Na aba do Spotify ela abre num painel ao lado da letra (src/panel.js); fora dele, numa aba.
+openOptionsButton.addEventListener('click', async () => {
+  try {
+    const [tab] = await api.tabs.query({ active: true, currentWindow: true });
+    if (tab?.url?.startsWith('https://open.spotify.com/')) {
+      await api.tabs.sendMessage(tab.id, { type: 'openPanel' });
+      window.close();
+      return;
+    }
+  } catch {
+    // Sem o content script na aba (página aberta antes de instalar, sem permissão): abre a aba.
+  }
   api.runtime.openOptionsPage();
   window.close();
 });

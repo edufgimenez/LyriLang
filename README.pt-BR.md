@@ -19,6 +19,7 @@ Funciona no Firefox (142+) e no Chrome (121+) com os mesmos arquivos. A interfac
 - `extension/src/background.js` traduz a letra inteira de uma vez, usando o endpoint gratuito do Google Tradutor (não oficial), e guarda o resultado em cache no `storage.local`.
 - `extension/popup/` permite ligar e desligar a tradução, escolher o idioma de destino e ativar as suas próprias cores da letra.
 - `extension/options/` permite escolher o visual da letra (cor de fundo ou uma imagem sua como wallpaper, cores da linha atual e das outras linhas, sombra no texto), no lugar das cores que o Spotify gera a partir da capa do álbum. A extensão sobrescreve as variáveis CSS `--lyrics-color-*` que o Spotify define, então não depende dos nomes das classes do Spotify.
+- `extension/src/panel.js` abre as opções num painel ao lado da letra quando você clica em **Personalizar visual** no popup na aba do Spotify, então as mudanças aparecem na hora, sem trocar de aba. Fora do Spotify, as opções abrem numa aba.
 
 > O texto das letras é enviado ao Google Tradutor para ser traduzido. Veja a [política de privacidade](PRIVACY.pt-BR.md).
 

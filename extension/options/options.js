@@ -360,6 +360,21 @@ api.storage.onChanged.addListener(async (changes, area) => {
   render();
 });
 
+// No painel lateral do Spotify (src/panel.js), a letra ao lado já serve de prévia.
+// Fechar avisa a página do Spotify, que tira o painel.
+if (new URLSearchParams(location.search).has('panel')) {
+  document.documentElement.classList.add('in-panel');
+  const closeButton = $('closePanel');
+  const close = () => window.parent.postMessage({ type: 'lyrilang:closePanel' }, 'https://open.spotify.com');
+  closeButton.hidden = false;
+  closeButton.title = t('closePanel');
+  closeButton.setAttribute('aria-label', t('closePanel'));
+  closeButton.addEventListener('click', close);
+  addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') close();
+  });
+}
+
 localizePage();
 Promise.all([getSettings(), getWallpaper(), getLyricsArea()]).then(([settings, storedWallpaper, storedArea]) => {
   colors = settings.colors;

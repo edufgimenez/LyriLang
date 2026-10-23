@@ -404,3 +404,39 @@ button.secondary {
 button.secondary:hover {
   border-color: var(--muted);
 }
+
+button.close {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: 24px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  cursor: pointer;
+}
+
+button.close:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Painel lateral no Spotify: sem a introdução e a prévia, porque a letra ao lado mostra as mudanças. */
+.in-panel {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.in-panel main {
+  margin: 0;
+  padding: 16px 20px 20px;
+}
+
+.in-panel .intro,
+.in-panel .preview-label,
+.in-panel #noAreaNote,
+.in-panel #preview {
+  display: none;
+}
