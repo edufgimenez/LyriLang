@@ -21,6 +21,10 @@
   let removeTimer = null;
   let placeTimer = null;
 
+  // Ao recarregar ou atualizar a extensão, o Firefox injeta este script de novo nas abas abertas,
+  // mas um painel que estava aberto fica na página sem funcionar (os scripts dele morrem).
+  document.querySelectorAll(`.${PANEL_CLASS}`).forEach((el) => el.remove());
+
   // Mesma altura da área da letra; sem a letra aberta, entre o cabeçalho e a barra do player.
   function panelBounds() {
     const holder = document.querySelector(MAIN_HOLDER_SELECTOR);
@@ -35,9 +39,13 @@
   }
 
   // A altura vai explícita: um iframe com top e bottom não estica (fica com 150px).
+  // Em janelas baixas a área da letra passa da tela (o Spotify tem altura mínima); o painel
+  // fica dentro da parte visível para o fim dele continuar alcançável.
   function placePanel() {
     if (!panel) return;
-    const { top, bottom } = panelBounds();
+    const area = panelBounds();
+    const top = Math.max(area.top, 0);
+    const bottom = Math.min(area.bottom, innerHeight - GAP);
     const height = `${Math.max(0, Math.round(bottom - top))}px`;
     if (panel.style.height !== height) panel.style.height = height;
     panel.style.top = `${Math.round(top)}px`;
